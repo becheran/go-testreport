@@ -1,0 +1,57 @@
+{"Time":"2022-12-28T18:59:33.9221551+01:00","Action":"output","Package":"go-depgraph","Output":"?   \tgo-depgraph\t[no test files]\n"}
+{"Time":"2022-12-28T18:59:33.9231574+01:00","Action":"skip","Package":"go-depgraph","Elapsed":0.001}
+{"Time":"2022-12-28T18:59:33.9231574+01:00","Action":"output","Package":"go-depgraph/pkg/mod","Output":"?   \tgo-depgraph/pkg/mod\t[no test files]\n"}
+{"Time":"2022-12-28T18:59:33.9231574+01:00","Action":"skip","Package":"go-depgraph/pkg/mod","Elapsed":0}
+{"Time":"2022-12-28T18:59:33.9231574+01:00","Action":"output","Package":"go-depgraph/pkg/server","Output":"?   \tgo-depgraph/pkg/server\t[no test files]\n"}
+{"Time":"2022-12-28T18:59:33.9243665+01:00","Action":"skip","Package":"go-depgraph/pkg/server","Elapsed":0.001}
+{"Time":"2022-12-28T18:59:34.7557926+01:00","Action":"run","Package":"go-depgraph/pkg/tree","Test":"TestMarshalJson"}
+{"Time":"2022-12-28T18:59:34.7557926+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestMarshalJson","Output":"=== RUN   TestMarshalJson\n"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"run","Package":"go-depgraph/pkg/tree","Test":"TestMarshalJson/[{\"data\":{\"id\":\"Foo\"}}]"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestMarshalJson/[{\"data\":{\"id\":\"Foo\"}}]","Output":"=== RUN   TestMarshalJson/[{\"data\":{\"id\":\"Foo\"}}]\n"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"run","Package":"go-depgraph/pkg/tree","Test":"TestMarshalJson/[]"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestMarshalJson/[]","Output":"=== RUN   TestMarshalJson/[]\n"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"run","Package":"go-depgraph/pkg/tree","Test":"TestMarshalJson/[{\"data\":{\"id\":\"Foo\"}},{\"data\":{\"id\":\"Bar\"}},{\"data\":{\"source\":\"Foo\",\"target\":\"Bar\"}}]"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestMarshalJson/[{\"data\":{\"id\":\"Foo\"}},{\"data\":{\"id\":\"Bar\"}},{\"data\":{\"source\":\"Foo\",\"target\":\"Bar\"}}]","Output":"=== RUN   TestMarshalJson/[{\"data\":{\"id\":\"Foo\"}},{\"data\":{\"id\":\"Bar\"}},{\"data\":{\"source\":\"Foo\",\"target\":\"Bar\"}}]\n"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestMarshalJson","Output":"--- PASS: TestMarshalJson (0.00s)\n"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestMarshalJson/[{\"data\":{\"id\":\"Foo\"}}]","Output":"    --- PASS: TestMarshalJson/[{\"data\":{\"id\":\"Foo\"}}] (0.00s)\n"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"pass","Package":"go-depgraph/pkg/tree","Test":"TestMarshalJson/[{\"data\":{\"id\":\"Foo\"}}]","Elapsed":0}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestMarshalJson/[]","Output":"    --- PASS: TestMarshalJson/[] (0.00s)\n"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"pass","Package":"go-depgraph/pkg/tree","Test":"TestMarshalJson/[]","Elapsed":0}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestMarshalJson/[{\"data\":{\"id\":\"Foo\"}},{\"data\":{\"id\":\"Bar\"}},{\"data\":{\"source\":\"Foo\",\"target\":\"Bar\"}}]","Output":"    --- PASS: TestMarshalJson/[{\"data\":{\"id\":\"Foo\"}},{\"data\":{\"id\":\"Bar\"}},{\"data\":{\"source\":\"Foo\",\"target\":\"Bar\"}}] (0.00s)\n"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"pass","Package":"go-depgraph/pkg/tree","Test":"TestMarshalJson/[{\"data\":{\"id\":\"Foo\"}},{\"data\":{\"id\":\"Bar\"}},{\"data\":{\"source\":\"Foo\",\"target\":\"Bar\"}}]","Elapsed":0}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"pass","Package":"go-depgraph/pkg/tree","Test":"TestMarshalJson","Elapsed":0}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"run","Package":"go-depgraph/pkg/tree","Test":"TestTraverse"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestTraverse","Output":"=== RUN   TestTraverse\n"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestTraverse","Output":"--- PASS: TestTraverse (0.00s)\n"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"pass","Package":"go-depgraph/pkg/tree","Test":"TestTraverse","Elapsed":0}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"run","Package":"go-depgraph/pkg/tree","Test":"TestTraverseComplex"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestTraverseComplex","Output":"=== RUN   TestTraverseComplex\n"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestTraverseComplex","Output":"--- PASS: TestTraverseComplex (0.00s)\n"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"pass","Package":"go-depgraph/pkg/tree","Test":"TestTraverseComplex","Elapsed":0}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"run","Package":"go-depgraph/pkg/tree","Test":"TestNoPackage"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestNoPackage","Output":"=== RUN   TestNoPackage\n"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestNoPackage","Output":"--- PASS: TestNoPackage (0.00s)\n"}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"pass","Package":"go-depgraph/pkg/tree","Test":"TestNoPackage","Elapsed":0}
+{"Time":"2022-12-28T18:59:34.7563148+01:00","Action":"run","Package":"go-depgraph/pkg/tree","Test":"TestFailingCtx_err"}
+{"Time":"2022-12-28T18:59:34.7568201+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestFailingCtx_err","Output":"=== RUN   TestFailingCtx_err\n"}
+{"Time":"2022-12-28T18:59:34.7568604+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestFailingCtx_err","Output":"--- PASS: TestFailingCtx_err (0.00s)\n"}
+{"Time":"2022-12-28T18:59:34.7568604+01:00","Action":"pass","Package":"go-depgraph/pkg/tree","Test":"TestFailingCtx_err","Elapsed":0}
+{"Time":"2022-12-28T18:59:34.7568604+01:00","Action":"run","Package":"go-depgraph/pkg/tree","Test":"TestSimpleTree"}
+{"Time":"2022-12-28T18:59:34.7568604+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestSimpleTree","Output":"=== RUN   TestSimpleTree\n"}
+{"Time":"2022-12-28T18:59:34.7568604+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestSimpleTree","Output":"--- PASS: TestSimpleTree (0.00s)\n"}
+{"Time":"2022-12-28T18:59:34.7568604+01:00","Action":"pass","Package":"go-depgraph/pkg/tree","Test":"TestSimpleTree","Elapsed":0}
+{"Time":"2022-12-28T18:59:34.7568604+01:00","Action":"run","Package":"go-depgraph/pkg/tree","Test":"TestRecurseReturnErr"}
+{"Time":"2022-12-28T18:59:34.7568604+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestRecurseReturnErr","Output":"=== RUN   TestRecurseReturnErr\n"}
+{"Time":"2022-12-28T18:59:34.7568604+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestRecurseReturnErr","Output":"    tree_test.go:101: \n"}
+{"Time":"2022-12-28T18:59:34.7568604+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestRecurseReturnErr","Output":"        \tError Trace:\ttree_test.go:101\n"}
+{"Time":"2022-12-28T18:59:34.7568604+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestRecurseReturnErr","Output":"        \tError:      \tExpected value not to be nil.\n"}
+{"Time":"2022-12-28T18:59:34.7568604+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestRecurseReturnErr","Output":"        \tTest:       \tTestRecurseReturnErr\n"}
+{"Time":"2022-12-28T18:59:34.7568604+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestRecurseReturnErr","Output":"--- FAIL: TestRecurseReturnErr (0.00s)\n"}
+{"Time":"2022-12-28T18:59:34.7568604+01:00","Action":"fail","Package":"go-depgraph/pkg/tree","Test":"TestRecurseReturnErr","Elapsed":0}
+{"Time":"2022-12-28T18:59:34.7568604+01:00","Action":"run","Package":"go-depgraph/pkg/tree","Test":"TestRecurseExceedMaxDepthErr"}
+{"Time":"2022-12-28T18:59:34.7568604+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestRecurseExceedMaxDepthErr","Output":"=== RUN   TestRecurseExceedMaxDepthErr\n"}
+{"Time":"2022-12-28T18:59:34.7584258+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Test":"TestRecurseExceedMaxDepthErr","Output":"--- PASS: TestRecurseExceedMaxDepthErr (0.00s)\n"}
+{"Time":"2022-12-28T18:59:34.7584258+01:00","Action":"pass","Package":"go-depgraph/pkg/tree","Test":"TestRecurseExceedMaxDepthErr","Elapsed":0}
+{"Time":"2022-12-28T18:59:34.7584258+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Output":"FAIL\n"}
+{"Time":"2022-12-28T18:59:34.7699894+01:00","Action":"output","Package":"go-depgraph/pkg/tree","Output":"FAIL\tgo-depgraph/pkg/tree\t0.318s\n"}
+{"Time":"2022-12-28T18:59:34.7699894+01:00","Action":"fail","Package":"go-depgraph/pkg/tree","Elapsed":0.318}
