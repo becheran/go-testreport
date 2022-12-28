@@ -27,7 +27,7 @@ func ResultToMarkdown(result Result) []byte {
 		total, result.Passed, result.Skipped, result.Failed, result.Duration))
 	res := maps.Values(result.PackageResult)
 	sort.Slice(res, func(i, j int) bool {
-		return IsLess(res[i].PackageResult, res[j].PackageResult, res[i].ElapsedSec, res[j].ElapsedSec)
+		return !IsLess(res[i].PackageResult, res[j].PackageResult, res[i].ElapsedSec, res[j].ElapsedSec)
 	})
 	for _, packRes := range res {
 		if packRes.PackageResult == FTPSSkip {
@@ -38,7 +38,7 @@ func ResultToMarkdown(result Result) []byte {
 		buf.WriteString("</summary>")
 		tests := maps.Values(packRes.Tests)
 		sort.Slice(tests, func(i, j int) bool {
-			return IsLess(tests[i].TestResult, tests[j].TestResult, tests[i].ElapsedSec, tests[j].ElapsedSec)
+			return !IsLess(tests[i].TestResult, tests[j].TestResult, tests[i].ElapsedSec, tests[j].ElapsedSec)
 		})
 		for _, testRes := range tests {
 			buf.WriteString("<blockquote><details><summary>")
