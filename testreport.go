@@ -37,6 +37,8 @@ func FinalTestStatusFromAction(e TestAction) *FinalTestStatus {
 		status = FTSPass
 	case TASkip:
 		status = FTPSSkip
+	default:
+		return nil
 	}
 	return &status
 }
@@ -85,26 +87,8 @@ func CreateReport(in io.Reader) (markdown []byte, err error) {
 		}
 		if _, packageExists := result.PackageResult[evt.Package]; !packageExists {
 			res := PackageResult{
-				Name: evt.Package,
-			}
-			if evt.Test != "" {
-				testRes := TestResult{
-					Name:       evt.Test,
-					ElapsedSec: evt.ElapsedSec,
-					Output:     []OutputLine{{Time: evt.Time, Text: evt.Output}},
-				}
-				if status := FinalTestStatusFromAction(evt.Action); status != nil {
-					testRes.TestResult = *status
-					switch *status {
-					case FTSPass:
-						result.Passed++
-					case FTSFail:
-						result.Failed++
-					case FTPSSkip:
-						result.Skipped++
-					}
-				}
-				res.Tests = map[string]*TestResult{evt.Test: &testRes}
+				Name:  evt.Package,
+				Tests: make(map[string]*TestResult),
 			}
 			result.PackageResult[evt.Package] = &res
 		}
