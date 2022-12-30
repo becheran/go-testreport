@@ -16,8 +16,8 @@ jobs:
         with:
           go-version: 1.19
       - name: Build
-        run: go build -v ./cmd/TestReport
-      - name: Test
         run: |
-          ls
-          go test -v ./... -json | TestReport >> $GITHUB_STEP_SUMMARY
+          go build -v ./cmd/TestReport
+          chmod +x TestReport
+      - name: Test
+        run: go test -v ./... -json | ./TestReport >> $GITHUB_STEP_SUMMARY
