@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"sort"
+	"strings"
 
 	"golang.org/x/exp/maps"
 )
@@ -46,7 +47,7 @@ func ResultToMarkdown(result Result) []byte {
 			buf.WriteString("</summary><blockquote>\n\n")
 			for _, outputLine := range testRes.Output {
 				if outputLine.Text != "" {
-					buf.WriteString(fmt.Sprintf("%s %s\n\n", outputLine.Time.Format("15:04:05.000"), outputLine.Text))
+					buf.WriteString(fmt.Sprintf("`%s` %s\n", outputLine.Time.Format("15:04:05.000"), EscapeMarkdown(outputLine.Text)))
 				}
 			}
 			buf.WriteString("</blockquote></details></blockquote>")
@@ -56,4 +57,19 @@ func ResultToMarkdown(result Result) []byte {
 	buf.WriteString("\n")
 
 	return buf.Bytes()
+}
+
+func EscapeMarkdown(input string) (escapedMarkdown string) {
+	replacer := strings.NewReplacer(
+		"_", "\\_",
+		"*", "\\*",
+		"#", "\\#",
+		"[", "\\[",
+		"]", "\\]",
+		"\\", "\\\\",
+		"`", "\\`",
+		" ", "&nbsp;",
+		"	", "&nbsp;&nbsp;&nbsp;&nbsp;",
+	)
+	return replacer.Replace(input)
 }

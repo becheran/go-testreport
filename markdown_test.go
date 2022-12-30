@@ -42,3 +42,25 @@ func TestIsLess(t *testing.T) {
 		})
 	}
 }
+
+func TestReplaceMarkdown(t *testing.T) {
+	var suite = []struct {
+		mdIn    string
+		escaped string
+	}{
+		{"foo", "foo"},
+		{"*", "\\*"},
+		{"_italic_", "\\_italic\\_"},
+		{"*foo*", "\\*foo\\*"},
+		{"[link](\"a lining\")", "\\[link\\](\"a&nbsp;lining\")"},
+		{"This is a reals backslash: \\", "This&nbsp;is&nbsp;a&nbsp;reals&nbsp;backslash:&nbsp;\\\\"},
+		{"`code`", "\\`code\\`"},
+		{" ", "&nbsp;"},
+		{"	", "&nbsp;&nbsp;&nbsp;&nbsp;"},
+	}
+	for _, s := range suite {
+		t.Run(fmt.Sprintf("%s => %s", s.mdIn, s.escaped), func(t *testing.T) {
+			assert.Equal(t, s.escaped, testreport.EscapeMarkdown(s.mdIn))
+		})
+	}
+}
