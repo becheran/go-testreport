@@ -32,10 +32,11 @@ func ResultToMarkdown(result Result) []byte {
 	})
 	for _, packRes := range res {
 		if packRes.PackageResult == FTPSSkip {
+			// Do not print skipped packages
 			continue
 		}
 		buf.WriteString("\n<details><summary>")
-		buf.WriteString(fmt.Sprintf("%s %s %.2fs", packRes.PackageResult.Icon(), packRes.Name, packRes.ElapsedSec))
+		buf.WriteString(fmt.Sprintf("%s %s %s %.2fs", packRes.PackageResult.Icon(), PackageTestPassRatio(packRes), packRes.Name, packRes.ElapsedSec))
 		buf.WriteString("</summary>")
 		tests := maps.Values(packRes.Tests)
 		sort.Slice(tests, func(i, j int) bool {
@@ -57,6 +58,16 @@ func ResultToMarkdown(result Result) []byte {
 	buf.WriteString("\n")
 
 	return buf.Bytes()
+}
+
+func PackageTestPassRatio(res *PackageResult) string {
+	passed := 0
+	for _, p := range res.Tests {
+		if p.TestResult != FTSFail {
+			passed++
+		}
+	}
+	return fmt.Sprintf("%0d/%0d", passed, len(res.Tests))
 }
 
 func EscapeMarkdown(input string) (escapedMarkdown string) {
