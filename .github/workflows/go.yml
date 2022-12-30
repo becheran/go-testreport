@@ -18,4 +18,6 @@ jobs:
       - name: Build
         run: go build -v ./cmd/TestReport
       - name: Test
-        run: go test -v ./... -json | TestReport >> $GITHUB_STEP_SUMMARY
+        run: |
+          ls
+          go test -v ./... -json | TestReport >> $GITHUB_STEP_SUMMARY
