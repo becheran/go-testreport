@@ -2,9 +2,10 @@ package testreport_test
 
 import (
 	"fmt"
-	"go-testreport"
 	"testing"
 	"time"
+
+	"github.com/becheran/go-testreport"
 
 	"github.com/stretchr/testify/assert"
 )

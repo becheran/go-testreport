@@ -2,9 +2,10 @@ package testreport_test
 
 import (
 	"encoding/json"
-	"go-testreport"
 	"testing"
 	"time"
+
+	"github.com/becheran/go-testreport"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

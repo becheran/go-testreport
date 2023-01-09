@@ -1,9 +1,10 @@
 package main
 
 import (
-	"go-testreport"
 	"log"
 	"os"
+
+	"github.com/becheran/go-testreport"
 )
 
 func main() {
