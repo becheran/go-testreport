@@ -1,4 +1,4 @@
-module go-testreport
+module https://github.com/becheran/go-testreport
 
 go 1.18
 
