@@ -51,7 +51,17 @@ func ResultToMarkdown(result Result) []byte {
 			continue
 		}
 		buf.WriteString("\n<details><summary>")
-		buf.WriteString(fmt.Sprintf("%s %s %s %.2fs", packRes.PackageResult.Icon(), PackageTestPassRatio(packRes, digitsPackageTests), packRes.Name, packRes.ElapsedSec))
+
+		// Highlight last part of package name
+		var packageHtml string
+		lastIdx := strings.LastIndex(packRes.Name, "/")
+		if lastIdx > 0 {
+			packageHtml = packRes.Name[:lastIdx] + "<b>" + packRes.Name[lastIdx:] + "<\\b>"
+		} else {
+			packageHtml = fmt.Sprintf("<b>%s<\\b>", packRes.Name)
+		}
+
+		buf.WriteString(fmt.Sprintf("%s %s %s %.2fs", packRes.PackageResult.Icon(), PackageTestPassRatio(packRes, digitsPackageTests), packageHtml, packRes.ElapsedSec))
 		buf.WriteString("</summary>")
 		tests := maps.Values(packRes.Tests)
 		sort.Slice(tests, func(i, j int) bool {
