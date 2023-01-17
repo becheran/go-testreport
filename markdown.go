@@ -9,6 +9,8 @@ import (
 	"golang.org/x/exp/maps"
 )
 
+const space = "&nbsp;"
+
 func IsLess(a_PackageResult, b_PackageResult FinalTestStatus, a_ElapsedSec, b_ElapsedSec float64) bool {
 	if a_PackageResult == FTSPass && b_PackageResult != FTSPass {
 		return true
@@ -30,13 +32,26 @@ func ResultToMarkdown(result Result) []byte {
 	sort.Slice(res, func(i, j int) bool {
 		return !IsLess(res[i].PackageResult, res[j].PackageResult, res[i].ElapsedSec, res[j].ElapsedSec)
 	})
+
+	digitsPackageTests := 0
+	for _, packRes := range res {
+		if packRes.PackageResult == FTPSSkip {
+			// Do not print skipped packages
+			continue
+		}
+		digits := digits(len(packRes.Tests))
+		if digitsPackageTests < digits {
+			digitsPackageTests = digits
+		}
+	}
+
 	for _, packRes := range res {
 		if packRes.PackageResult == FTPSSkip {
 			// Do not print skipped packages
 			continue
 		}
 		buf.WriteString("\n<details><summary>")
-		buf.WriteString(fmt.Sprintf("%s %s %s %.2fs", packRes.PackageResult.Icon(), PackageTestPassRatio(packRes), packRes.Name, packRes.ElapsedSec))
+		buf.WriteString(fmt.Sprintf("%s %s %s %.2fs", packRes.PackageResult.Icon(), PackageTestPassRatio(packRes, digitsPackageTests), packRes.Name, packRes.ElapsedSec))
 		buf.WriteString("</summary>")
 		tests := maps.Values(packRes.Tests)
 		sort.Slice(tests, func(i, j int) bool {
@@ -60,14 +75,38 @@ func ResultToMarkdown(result Result) []byte {
 	return buf.Bytes()
 }
 
-func PackageTestPassRatio(res *PackageResult) string {
+func digits(n int) int {
+	if n == 0 {
+		return 0
+	}
+	count := 0
+	for n > 0 {
+		n = n / 10
+		count++
+	}
+	return count
+}
+
+func PackageTestPassRatio(res *PackageResult, digitsPackageTests int) string {
 	passed := 0
 	for _, p := range res.Tests {
 		if p.TestResult != FTSFail {
 			passed++
 		}
 	}
-	return fmt.Sprintf("%0d/%0d", passed, len(res.Tests))
+
+	result := bytes.NewBuffer(nil)
+	// Pad with whitespace
+	for i := 0; i < digitsPackageTests-digits(passed); i++ {
+		result.WriteString(space)
+	}
+	result.WriteString(fmt.Sprintf("%d/%d", passed, len(res.Tests)))
+	// Pad with whitespace
+	for i := 0; i < digitsPackageTests-len(res.Tests); i++ {
+		result.WriteString(space)
+	}
+
+	return result.String()
 }
 
 func EscapeMarkdown(input string) (escapedMarkdown string) {
@@ -79,8 +118,8 @@ func EscapeMarkdown(input string) (escapedMarkdown string) {
 		"]", "\\]",
 		"\\", "\\\\",
 		"`", "\\`",
-		" ", "&nbsp;",
-		"	", "&nbsp;&nbsp;&nbsp;&nbsp;",
+		" ", space,
+		"	", space+space+space+space,
 	)
 	return replacer.Replace(input)
 }
