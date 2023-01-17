@@ -56,9 +56,10 @@ func ResultToMarkdown(result Result) []byte {
 		var packageHtml string
 		lastIdx := strings.LastIndex(packRes.Name, "/")
 		if lastIdx > 0 {
-			packageHtml = packRes.Name[:lastIdx] + "<b>" + packRes.Name[lastIdx:] + "<\\b>"
+			lastIdx++ // Exclude slash
+			packageHtml = packRes.Name[:lastIdx] + "<b>" + packRes.Name[lastIdx:] + "</b>"
 		} else {
-			packageHtml = fmt.Sprintf("<b>%s<\\b>", packRes.Name)
+			packageHtml = fmt.Sprintf("<b>%s</b>", packRes.Name)
 		}
 
 		buf.WriteString(fmt.Sprintf("%s %s %s %.2fs", packRes.PackageResult.Icon(), PackageTestPassRatio(packRes, digitsPackageTests), packageHtml, packRes.ElapsedSec))
