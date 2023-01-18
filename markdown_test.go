@@ -36,6 +36,10 @@ func TestIsLess(t *testing.T) {
 		{testreport.FTSPass, testreport.FTSFail, 100, 0, true},
 		{testreport.FTSFail, testreport.FTSFail, 0, 100, true},
 		{testreport.FTSPass, testreport.FTSPass, 0, 100, true},
+		{testreport.FTPSSkip, testreport.FTSPass, 0, 0, true},
+		{testreport.FTPSSkip, testreport.FTSPass, 100, 0, true},
+		{testreport.FTPSSkip, testreport.FTSFail, 0, 0, true},
+		{testreport.FTPSSkip, testreport.FTSFail, 100, 0, true},
 	}
 	for _, s := range suite {
 		t.Run(fmt.Sprintf("A(%s %f) B(%s %f)", s.aStatus.Icon(), s.aElapsedSec, s.bStatus.Icon(), s.bElapsedSec), func(t *testing.T) {

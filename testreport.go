@@ -10,9 +10,9 @@ import (
 type FinalTestStatus uint8
 
 const (
-	FTSPass FinalTestStatus = iota
+	FTPSSkip FinalTestStatus = iota
+	FTSPass
 	FTSFail
-	FTPSSkip
 )
 
 func (fs FinalTestStatus) Icon() string {

@@ -12,15 +12,10 @@ import (
 const space = "&nbsp;"
 
 func IsLess(a_PackageResult, b_PackageResult FinalTestStatus, a_ElapsedSec, b_ElapsedSec float64) bool {
-	if a_PackageResult == FTSPass && b_PackageResult != FTSPass {
-		return true
-	} else if b_PackageResult == FTSPass && a_PackageResult != FTSPass {
-		return false
+	if a_PackageResult == b_PackageResult {
+		return a_ElapsedSec < b_ElapsedSec
 	}
-	if a_ElapsedSec < b_ElapsedSec {
-		return true
-	}
-	return false
+	return a_PackageResult < b_PackageResult
 }
 
 func ResultToMarkdown(result Result) []byte {
