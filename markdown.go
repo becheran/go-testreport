@@ -113,7 +113,7 @@ func PackageTestPassRatio(res *PackageResult, digitsPackageTests int) string {
 	}
 	result.WriteString(fmt.Sprintf("%d/%d", passed, len(res.Tests)))
 	// Pad with whitespace
-	for i := 0; i < digitsPackageTests-len(res.Tests); i++ {
+	for i := 0; i < digitsPackageTests-digits(len(res.Tests)); i++ {
 		result.WriteString(space)
 	}
 
