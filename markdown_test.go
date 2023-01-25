@@ -69,3 +69,29 @@ func TestReplaceMarkdown(t *testing.T) {
 		})
 	}
 }
+
+func TestPackageTestPassRatio(t *testing.T) {
+	const s = testreport.NonBreakingSpace
+	var suite = []struct {
+		passed int
+		tests  int
+		digits int
+		result string
+	}{
+		{0, 0, 1, "0/0"},
+		{0, 1, 1, "0/1"},
+		{1, 0, 1, "1/0"},
+		{10, 10, 2, "10/10"},
+		{0, 0, 2, s + "0/0" + s},
+		{1, 10, 2, s + "1/10"},
+		{10, 1, 2, "10/1" + s},
+		{10, 1, 3, s + "10/1" + s + s},
+		{666, 1, 3, "666/1" + s + s},
+		{10, 1, 4, s + s + "10/1" + s + s + s},
+	}
+	for _, s := range suite {
+		t.Run(fmt.Sprintf("PackageTestPassRatio(%d,%d,%d)", s.passed, s.tests, s.digits), func(t *testing.T) {
+			assert.Equal(t, s.result, testreport.PackageTestPassRatio(s.passed, s.tests, s.digits))
+		})
+	}
+}

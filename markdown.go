@@ -6,10 +6,11 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/becheran/go-testreport/internal/numhelper"
 	"golang.org/x/exp/maps"
 )
 
-const space = "&nbsp;"
+const NonBreakingSpace = "&nbsp;"
 
 func IsLess(a_PackageResult, b_PackageResult FinalTestStatus, a_ElapsedSec, b_ElapsedSec float64) bool {
 	if a_PackageResult == b_PackageResult {
@@ -34,7 +35,7 @@ func ResultToMarkdown(result Result) []byte {
 			// Do not print skipped packages
 			continue
 		}
-		digits := digits(len(packRes.Tests))
+		digits := numhelper.Digits(len(packRes.Tests))
 		if digitsPackageTests < digits {
 			digitsPackageTests = digits
 		}
@@ -57,7 +58,13 @@ func ResultToMarkdown(result Result) []byte {
 			packageHtml = fmt.Sprintf("<b>%s</b>", packRes.Name)
 		}
 
-		buf.WriteString(fmt.Sprintf("%s %s %s %.2fs", packRes.PackageResult.Icon(), PackageTestPassRatio(packRes, digitsPackageTests), packageHtml, packRes.ElapsedSec))
+		passed := 0
+		for _, p := range packRes.Tests {
+			if p.TestResult != FTSFail {
+				passed++
+			}
+		}
+		buf.WriteString(fmt.Sprintf("%s %s %s %.2fs", packRes.PackageResult.Icon(), PackageTestPassRatio(passed, len(packRes.Tests), digitsPackageTests), packageHtml, packRes.ElapsedSec))
 		buf.WriteString("</summary>")
 		tests := maps.Values(packRes.Tests)
 		sort.Slice(tests, func(i, j int) bool {
@@ -81,35 +88,16 @@ func ResultToMarkdown(result Result) []byte {
 	return buf.Bytes()
 }
 
-func digits(n int) int {
-	if n == 0 {
-		return 0
-	}
-	count := 0
-	for n > 0 {
-		n = n / 10
-		count++
-	}
-	return count
-}
-
-func PackageTestPassRatio(res *PackageResult, digitsPackageTests int) string {
-	passed := 0
-	for _, p := range res.Tests {
-		if p.TestResult != FTSFail {
-			passed++
-		}
-	}
-
+func PackageTestPassRatio(passed int, tests int, digitsPackageTests int) string {
 	result := bytes.NewBuffer(nil)
 	// Pad with whitespace
-	for i := 0; i < digitsPackageTests-digits(passed); i++ {
-		result.WriteString(space)
+	for i := 0; i < digitsPackageTests-numhelper.Digits(passed); i++ {
+		result.WriteString(NonBreakingSpace)
 	}
-	result.WriteString(fmt.Sprintf("%d/%d", passed, len(res.Tests)))
+	result.WriteString(fmt.Sprintf("%d/%d", passed, tests))
 	// Pad with whitespace
-	for i := 0; i < digitsPackageTests-digits(len(res.Tests)); i++ {
-		result.WriteString(space)
+	for i := 0; i < digitsPackageTests-numhelper.Digits(tests); i++ {
+		result.WriteString(NonBreakingSpace)
 	}
 
 	return result.String()
@@ -124,8 +112,8 @@ func EscapeMarkdown(input string) (escapedMarkdown string) {
 		"]", "\\]",
 		"\\", "\\\\",
 		"`", "\\`",
-		" ", space,
-		"	", space+space+space+space,
+		" ", NonBreakingSpace,
+		"	", NonBreakingSpace+NonBreakingSpace+NonBreakingSpace+NonBreakingSpace,
 	)
 	return replacer.Replace(input)
 }
