@@ -10,14 +10,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestResultToMarkdown(t *testing.T) {
-	res := testreport.Result{Passed: 1, Failed: 2, Skipped: 3, Duration: time.Second * 13, PackageResult: map[string]*testreport.PackageResult{}}
-
-	defaultReport := testreport.ResultToMarkdown(res)
-
-	assert.Equal(t, "# Test Report\n\nTotal: 6 ✔️ Passed: 1 ⏩ Skipped: 3 ❌ Failed: 2 ⏱️ Duration: 13s\n\n", string(defaultReport))
-}
-
 func TestIsLess(t *testing.T) {
 	var suite = []struct {
 		aStatus     testreport.FinalTestStatus
@@ -43,12 +35,12 @@ func TestIsLess(t *testing.T) {
 	}
 	for _, s := range suite {
 		t.Run(fmt.Sprintf("A(%s %f) B(%s %f)", s.aStatus.Icon(), s.aElapsedSec, s.bStatus.Icon(), s.bElapsedSec), func(t *testing.T) {
-			assert.Equal(t, s.isLess, testreport.IsLess(s.aStatus, s.bStatus, s.aElapsedSec, s.bElapsedSec))
+			assert.Equal(t, s.isLess, testreport.IsLess(s.aStatus, s.bStatus, time.Duration(float64(time.Second)*s.aElapsedSec), time.Duration(float64(time.Second)*s.bElapsedSec)))
 		})
 	}
 }
 
-func TestReplaceMarkdown(t *testing.T) {
+func TestEscapeMarkdown(t *testing.T) {
 	var suite = []struct {
 		mdIn    string
 		escaped string
@@ -70,28 +62,17 @@ func TestReplaceMarkdown(t *testing.T) {
 	}
 }
 
-func TestPackageTestPassRatio(t *testing.T) {
-	const s = testreport.NonBreakingSpace
+func TestEscapeHtml(t *testing.T) {
 	var suite = []struct {
-		passed int
-		tests  int
-		digits int
-		result string
+		htmlIn  string
+		escaped string
 	}{
-		{0, 0, 1, "0/0"},
-		{0, 1, 1, "0/1"},
-		{1, 0, 1, "1/0"},
-		{10, 10, 2, "10/10"},
-		{0, 0, 2, s + "0/0" + s},
-		{1, 10, 2, s + "1/10"},
-		{10, 1, 2, "10/1" + s},
-		{10, 1, 3, s + "10/1" + s + s},
-		{666, 1, 3, "666/1" + s + s},
-		{10, 1, 4, s + s + "10/1" + s + s + s},
+		{"foo", "foo"},
+		{"<script>alert(123);</script>", "&lt;script&gt;alert(123);&lt;/script&gt;"},
 	}
 	for _, s := range suite {
-		t.Run(fmt.Sprintf("PackageTestPassRatio(%d,%d,%d)", s.passed, s.tests, s.digits), func(t *testing.T) {
-			assert.Equal(t, s.result, testreport.PackageTestPassRatio(s.passed, s.tests, s.digits))
+		t.Run(fmt.Sprintf("%s => %s", s.htmlIn, s.escaped), func(t *testing.T) {
+			assert.Equal(t, s.escaped, testreport.EscapeHtml(s.htmlIn))
 		})
 	}
 }
