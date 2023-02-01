@@ -3,6 +3,7 @@ package testreport_test
 import (
 	"bytes"
 	"fmt"
+	"strings"
 	"testing"
 	"text/template"
 	"time"
@@ -143,6 +144,45 @@ func TestPackageName(t *testing.T) {
 			p := testreport.PackageName(s.name)
 			assert.Equal(t, s.path, p.Path())
 			assert.Equal(t, s.pack, p.Package())
+		})
+	}
+}
+
+func TestParseTestJson(t *testing.T) {
+	var suite = []struct {
+		json   string
+		result testreport.Result
+		isErr  bool
+	}{
+		{"foo bar", testreport.Result{}, true},
+		{"{}", testreport.Result{PackageResult: []testreport.PackageResult{{Tests: []testreport.TestResult{}}}}, false},
+		{`{"Time":"2023-02-01T19:55:05.5952434+01:00","Action":"run","Package":"github.com/becheran/go-testreport","Test":"TestIsLess"}
+{"Time":"2023-02-01T19:55:05.6018655+01:00","Action":"pass","Package":"github.com/becheran/go-testreport","Test":"TestIsLess","Elapsed":0}
+{"Time":"2023-02-01T19:55:05.6387874+01:00","Action":"pass","Package":"github.com/becheran/go-testreport","Elapsed":1.117}
+`, testreport.Result{Tests: 1, Passed: 1, Duration: time.Second, PackageResult: []testreport.PackageResult{
+			{
+				Name:          "github.com/becheran/go-testreport",
+				Duration:      1117000000,
+				PackageResult: testreport.FTSPass,
+				Tests: []testreport.TestResult{
+					{Name: "TestIsLess",
+						TestResult: testreport.FTSPass,
+						Output: []testreport.OutputLine{
+							{Time: time.Date(2023, time.February, 1, 19, 55, 5, 595243400, time.Local)},
+							{Time: time.Date(2023, time.February, 1, 19, 55, 5, 601865500, time.Local)},
+						}},
+				}}}}, false},
+	}
+	for i, s := range suite {
+		t.Run(fmt.Sprintf("(%d)", i), func(t *testing.T) {
+			res, err := testreport.ParseTestJson(strings.NewReader(s.json))
+			if s.isErr {
+				assert.NotNil(t, err)
+				assert.Empty(t, res)
+			} else {
+				assert.Nil(t, err)
+				assert.Equal(t, s.result, res)
+			}
 		})
 	}
 }

@@ -121,6 +121,7 @@ func ParseTestJson(in io.Reader) (result Result, err error) {
 				Name: PackageName(evt.Package),
 			}
 			packageResult[evt.Package] = &res
+			testResultForPackage[evt.Package] = map[string]*TestResult{}
 		}
 
 		if evt.Test == "" {
