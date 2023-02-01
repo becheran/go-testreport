@@ -21,13 +21,13 @@ func TestCreateReport(t *testing.T) {
 		{testreport.Result{}, "foo bar", "foo bar"},
 		{testreport.Result{Passed: 42}, "foo bar {{.Passed}}", "foo bar 42"},
 		{testreport.Result{Passed: 42, Failed: 12, Skipped: 0, Duration: 120}, `{{.Passed}} {{.Failed}} {{.Skipped}} {{.Duration | printf "%d"}}`, "42 12 0 120"},
-		{testreport.Result{PackageResult: map[string]*testreport.PackageResult{
-			"foo": {
+		{testreport.Result{PackageResult: []testreport.PackageResult{
+			{
 				Name:          "foo",
 				Duration:      time.Second * 125,
 				PackageResult: testreport.FTPSSkip,
-				Tests: map[string]*testreport.TestResult{
-					"t1": {Name: "t1", Duration: time.Minute, TestResult: testreport.FTSFail, Output: []testreport.OutputLine{
+				Tests: []testreport.TestResult{
+					{Name: "t1", Duration: time.Minute, TestResult: testreport.FTSFail, Output: []testreport.OutputLine{
 						{Time: time.Time{}, Text: "foo"},
 						{Time: time.Time{}, Text: "bar"},
 					}},
@@ -66,13 +66,13 @@ func TestCreateDefaultReport(t *testing.T) {
 			Skipped:  3,
 			Failed:   4,
 			Duration: time.Second * 124,
-			PackageResult: map[string]*testreport.PackageResult{
-				"name/p1": {
+			PackageResult: []testreport.PackageResult{
+				{
 					Name:          "name/p1",
 					Duration:      time.Second * 12,
 					PackageResult: testreport.FTSPass,
-					Tests: map[string]*testreport.TestResult{
-						"t1": {
+					Tests: []testreport.TestResult{
+						{
 							Name:       "t1",
 							Duration:   time.Second,
 							TestResult: testreport.FTPSSkip,

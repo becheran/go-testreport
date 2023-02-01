@@ -93,7 +93,7 @@ type PackageResult struct {
 	Name          PackageName
 	Duration      time.Duration
 	PackageResult FinalTestStatus
-	Tests         map[string]*TestResult
+	Tests         []TestResult
 }
 
 type Result struct {
@@ -102,14 +102,13 @@ type Result struct {
 	Skipped       uint
 	Tests         uint
 	Duration      time.Duration
-	PackageResult map[string]*PackageResult
+	PackageResult []PackageResult
 	Vars          map[string]string
 }
 
 func ParseTestJson(in io.Reader) (result Result, err error) {
-	result = Result{
-		PackageResult: make(map[string]*PackageResult),
-	}
+	packageResult := make(map[string]*PackageResult)
+	testResultForPackage := make(map[string]map[string]*TestResult)
 	scanner := bufio.NewScanner(in)
 	for scanner.Scan() {
 		line := scanner.Bytes()
@@ -117,31 +116,30 @@ func ParseTestJson(in io.Reader) (result Result, err error) {
 		if err := json.Unmarshal(line, &evt); err != nil {
 			return Result{}, err
 		}
-		if _, packageExists := result.PackageResult[evt.Package]; !packageExists {
+		if _, packageExists := packageResult[evt.Package]; !packageExists {
 			res := PackageResult{
-				Name:  PackageName(evt.Package),
-				Tests: make(map[string]*TestResult),
+				Name: PackageName(evt.Package),
 			}
-			result.PackageResult[evt.Package] = &res
+			packageResult[evt.Package] = &res
 		}
 
 		if evt.Test == "" {
 			if status := FinalTestStatusFromAction(evt.Action); status != nil {
-				result.PackageResult[evt.Package].PackageResult = *status
+				packageResult[evt.Package].PackageResult = *status
 				result.Duration += time.Second * time.Duration(evt.ElapsedSec)
 			}
-			result.PackageResult[evt.Package].Duration = time.Duration(float64(time.Second) * evt.ElapsedSec)
+			packageResult[evt.Package].Duration = time.Duration(float64(time.Second) * evt.ElapsedSec)
 		} else {
-			if testRes, testExists := result.PackageResult[evt.Package].Tests[evt.Test]; testExists {
+			if testRes, testExists := testResultForPackage[evt.Package][evt.Test]; testExists {
 				testRes.Output = append(testRes.Output, OutputLine{Time: evt.Time, Text: evt.Output})
 			} else {
-				result.PackageResult[evt.Package].Tests[evt.Test] = &TestResult{
+				testResultForPackage[evt.Package][evt.Test] = &TestResult{
 					Name:   evt.Test,
 					Output: []OutputLine{{Time: evt.Time, Text: evt.Output}},
 				}
 			}
 			if status := FinalTestStatusFromAction(evt.Action); status != nil {
-				test := result.PackageResult[evt.Package].Tests[evt.Test]
+				test := testResultForPackage[evt.Package][evt.Test]
 				test.TestResult = *status
 				test.Duration = time.Duration(float64(time.Second) * evt.ElapsedSec)
 				switch *status {
@@ -156,6 +154,16 @@ func ParseTestJson(in io.Reader) (result Result, err error) {
 		}
 	}
 	result.Tests = result.Skipped + result.Failed + result.Passed
+	result.PackageResult = make([]PackageResult, 0, len(packageResult))
+	for _, val := range packageResult {
+		res := *val
+		tests := testResultForPackage[string(val.Name)]
+		res.Tests = make([]TestResult, 0, len(tests))
+		for _, test := range tests {
+			res.Tests = append(res.Tests, *test)
+		}
+		result.PackageResult = append(result.PackageResult, res)
+	}
 	return result, nil
 }
 
