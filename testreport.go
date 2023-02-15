@@ -158,6 +158,10 @@ func ParseTestJson(in io.Reader) (result Result, err error) {
 	result.Tests = result.Skipped + result.Failed + result.Passed
 	result.PackageResult = make([]PackageResult, 0, len(packageResult))
 	for _, val := range packageResult {
+		if val.PackageResult == FTPSSkip {
+			// Ignore skipped packages in report
+			continue
+		}
 		res := *val
 		tests := testResultForPackage[string(val.Name)]
 		res.Tests = make([]TestResult, 0, len(tests))
