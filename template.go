@@ -6,7 +6,7 @@ const defaultTemplateMarkdown = `# Test Report
 
 Total: {{.Tests}} ✔️ Passed: {{.Passed}} ⏩ Skipped: {{.Skipped}} ❌ Failed: {{.Failed}} ⏱️ Duration: {{.Duration}}
 
-{{range .PackageResult}}<details><summary>{{.PackageResult.Icon}} 10/37 {{.Name.Path}}<b>{{.Name.Package}}</b> {{.Duration}}</summary>
+{{range .PackageResult}}<details><summary>{{.PackageResult.Icon}} {{.Succeeded}}/{{len .Tests}} {{.Name.Path}}<b>{{.Name.Package}}</b> {{.Duration}}</summary>
 
 {{range .Tests}}<blockquote><details><summary>{{.TestResult.Icon}} {{.Name}} {{.Duration}}</summary><blockquote>
 

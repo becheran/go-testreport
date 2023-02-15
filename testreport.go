@@ -93,6 +93,7 @@ type PackageResult struct {
 	Name          PackageName
 	Duration      time.Duration
 	PackageResult FinalTestStatus
+	Succeeded     int
 	Tests         []TestResult
 }
 
@@ -162,6 +163,9 @@ func ParseTestJson(in io.Reader) (result Result, err error) {
 		res.Tests = make([]TestResult, 0, len(tests))
 		for _, test := range tests {
 			res.Tests = append(res.Tests, *test)
+			if test.TestResult == FTSPass || test.TestResult == FTPSSkip {
+				res.Succeeded++
+			}
 		}
 		result.PackageResult = append(result.PackageResult, res)
 	}

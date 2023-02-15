@@ -62,7 +62,7 @@ func TestCreateDefaultReport(t *testing.T) {
 		out    string
 	}{
 		{testreport.Result{
-			Tests:    12 + 3 + 4,
+			Tests:    19,
 			Passed:   12,
 			Skipped:  3,
 			Failed:   4,
@@ -72,6 +72,7 @@ func TestCreateDefaultReport(t *testing.T) {
 					Name:          "name/p1",
 					Duration:      time.Second * 12,
 					PackageResult: testreport.FTSPass,
+					Succeeded:     1,
 					Tests: []testreport.TestResult{
 						{
 							Name:       "t1",
@@ -90,7 +91,7 @@ func TestCreateDefaultReport(t *testing.T) {
 
 Total: 19 ✔️ Passed: 12 ⏩ Skipped: 3 ❌ Failed: 4 ⏱️ Duration: 2m4s
 
-<details><summary>✔️ 10/37 name/<b>p1</b> 12s</summary>
+<details><summary>✔️ 1/1 name/<b>p1</b> 12s</summary>
 
 <blockquote><details><summary>⏩ t1 1s</summary><blockquote>
 
@@ -164,6 +165,7 @@ func TestParseTestJson(t *testing.T) {
 				Name:          "github.com/becheran/go-testreport",
 				Duration:      1117000000,
 				PackageResult: testreport.FTSPass,
+				Succeeded:     1,
 				Tests: []testreport.TestResult{
 					{Name: "TestIsLess",
 						TestResult: testreport.FTSPass,
