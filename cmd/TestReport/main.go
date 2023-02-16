@@ -34,4 +34,10 @@ func main() {
 	if err := testreport.CreateReport(result, os.Stdout, tmp); err != nil {
 		log.Fatalf("Failed to create test report. %s", err)
 	}
+
+	for _, packRes := range result.PackageResult {
+		if packRes.PackageResult == testreport.FTSFail {
+			os.Exit(1)
+		}
+	}
 }

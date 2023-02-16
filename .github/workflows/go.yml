@@ -33,4 +33,4 @@ jobs:
           go build -v ./cmd/TestReport
           chmod +x TestReport
       - name: Test
-        run: go test -v ./... -json | ./TestReport >> $GITHUB_STEP_SUMMARY; echo $?
+        run: go test -v ./... -json | ./TestReport >> $GITHUB_STEP_SUMMARY
