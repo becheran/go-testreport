@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"sort"
 	"strings"
 	"text/template"
 	"time"
@@ -173,6 +174,10 @@ func ParseTestJson(in io.Reader) (result Result, err error) {
 		}
 		result.PackageResult = append(result.PackageResult, res)
 	}
+	sort.Slice(result.PackageResult, func(i, j int) bool {
+		return !IsLess(result.PackageResult[i].PackageResult, result.PackageResult[j].PackageResult,
+			result.PackageResult[i].Duration, result.PackageResult[j].Duration)
+	})
 	return result, nil
 }
 
