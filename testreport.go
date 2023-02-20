@@ -98,6 +98,36 @@ type PackageResult struct {
 	Tests         []TestResult
 }
 
+func (p PackageResult) String() string {
+	res := strings.Builder{}
+	switch p.PackageResult {
+	case FTSPass:
+		res.WriteString("ok      ")
+	case FTPSSkip:
+		res.WriteString("?       ")
+	case FTSFail:
+		for _, test := range p.Tests {
+			if test.TestResult == FTSFail {
+				for _, line := range test.Output {
+					res.WriteString(line.Text)
+					res.WriteString("\n")
+				}
+			}
+		}
+		res.WriteString("FAIL    ")
+	default:
+		panic("BUG! Unexpected package result" + p.PackageResult.String())
+	}
+	res.WriteString(string(p.Name))
+	res.WriteString(" ")
+	if p.PackageResult == FTPSSkip && len(p.Tests) == 0 {
+		res.WriteString("[no test files]")
+	} else {
+		res.WriteString(p.Duration.String())
+	}
+	return res.String()
+}
+
 type Result struct {
 	Failed        uint
 	Passed        uint

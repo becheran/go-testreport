@@ -189,3 +189,38 @@ func TestParseTestJson(t *testing.T) {
 		})
 	}
 }
+
+func TestPackageResultString(t *testing.T) {
+	var suite = []struct {
+		res testreport.PackageResult
+		str string
+	}{
+		{
+			testreport.PackageResult{Name: "github.com/becheran/go-testreport/cmd/TestReport", PackageResult: testreport.FTPSSkip},
+			"?       github.com/becheran/go-testreport/cmd/TestReport [no test files]",
+		},
+		{
+			testreport.PackageResult{Name: "foo", PackageResult: testreport.FTSPass, Duration: time.Second * 130},
+			"ok      foo 2m10s",
+		},
+		{
+			testreport.PackageResult{
+				Name:          "foo",
+				PackageResult: testreport.FTSFail,
+				Duration:      time.Minute * 2,
+				Tests: []testreport.TestResult{
+					{Name: "t1", Duration: time.Minute, TestResult: testreport.FTSFail, Output: []testreport.OutputLine{
+						{Text: "output_1"},
+						{Text: "output_2"},
+					}},
+				},
+			},
+			"output_1\noutput_2\nFAIL    foo 2m0s",
+		},
+	}
+	for _, s := range suite {
+		t.Run(s.str, func(t *testing.T) {
+			assert.Equal(t, s.str, s.res.String())
+		})
+	}
+}

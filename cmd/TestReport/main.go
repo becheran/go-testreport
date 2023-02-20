@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 
@@ -35,9 +36,15 @@ func main() {
 		log.Fatalf("Failed to create test report. %s", err)
 	}
 
+	failed := false
 	for _, packRes := range result.PackageResult {
+		fmt.Println(packRes.String())
 		if packRes.PackageResult == testreport.FTSFail {
-			os.Exit(1)
+			failed = true
 		}
+	}
+
+	if failed {
+		os.Exit(1)
 	}
 }
