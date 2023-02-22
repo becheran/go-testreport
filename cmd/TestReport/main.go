@@ -38,7 +38,7 @@ func main() {
 
 	failed := false
 	for _, packRes := range result.PackageResult {
-		fmt.Println(packRes.String())
+		fmt.Fprintf(os.Stderr, "%s\n", packRes)
 		if packRes.PackageResult == testreport.FTSFail {
 			failed = true
 		}
