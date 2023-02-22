@@ -110,7 +110,6 @@ func (p PackageResult) String() string {
 			if test.TestResult == FTSFail {
 				for _, line := range test.Output {
 					res.WriteString(line.Text)
-					res.WriteString("\n")
 				}
 			}
 		}

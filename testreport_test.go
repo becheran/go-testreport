@@ -210,8 +210,8 @@ func TestPackageResultString(t *testing.T) {
 				Duration:      time.Minute * 2,
 				Tests: []testreport.TestResult{
 					{Name: "t1", Duration: time.Minute, TestResult: testreport.FTSFail, Output: []testreport.OutputLine{
-						{Text: "output_1"},
-						{Text: "output_2"},
+						{Text: "output_1\n"},
+						{Text: "output_2\n"},
 					}},
 				},
 			},
