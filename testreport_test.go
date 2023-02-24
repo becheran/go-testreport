@@ -150,6 +150,10 @@ func TestPackageName(t *testing.T) {
 }
 
 func TestParseTestJson(t *testing.T) {
+	const timeStr = "2023-02-01T19:55:05.5952434+01:00"
+	timeObj, err := time.Parse(time.RFC3339, timeStr)
+	require.Nil(t, err)
+
 	var suite = []struct {
 		json   string
 		result testreport.Result
@@ -157,10 +161,10 @@ func TestParseTestJson(t *testing.T) {
 	}{
 		{"foo bar", testreport.Result{}, true},
 		{"{}", testreport.Result{PackageResult: []testreport.PackageResult{}}, false},
-		{`{"Time":"2023-02-01T19:55:05.5952434+01:00","Action":"run","Package":"github.com/becheran/go-testreport","Test":"TestIsLess"}
-{"Time":"2023-02-01T19:55:05.6018655+01:00","Action":"pass","Package":"github.com/becheran/go-testreport","Test":"TestIsLess","Elapsed":0}
-{"Time":"2023-02-01T19:55:05.6387874+01:00","Action":"pass","Package":"github.com/becheran/go-testreport","Elapsed":1.117}
-{"Time":"2023-02-01T20:55:05.6387874+01:00","Action":"skip","Package":"github.com/becheran/foo","Elapsed":0}
+		{`{"Time":"` + timeStr + `","Action":"run","Package":"github.com/becheran/go-testreport","Test":"TestIsLess"}
+{"Time":"` + timeStr + `","Action":"pass","Package":"github.com/becheran/go-testreport","Test":"TestIsLess","Elapsed":0}
+{"Time":"` + timeStr + `","Action":"pass","Package":"github.com/becheran/go-testreport","Elapsed":1.117}
+{"Time":"` + timeStr + `","Action":"skip","Package":"github.com/becheran/foo","Elapsed":0}
 `, testreport.Result{Tests: 1, Passed: 1, Duration: time.Second, PackageResult: []testreport.PackageResult{
 			{
 				Name:          "github.com/becheran/go-testreport",
@@ -171,8 +175,8 @@ func TestParseTestJson(t *testing.T) {
 					{Name: "TestIsLess",
 						TestResult: testreport.FTSPass,
 						Output: []testreport.OutputLine{
-							{Time: time.Date(2023, time.February, 1, 19, 55, 5, 595243400, time.Local)},
-							{Time: time.Date(2023, time.February, 1, 19, 55, 5, 601865500, time.Local)},
+							{Time: timeObj},
+							{Time: timeObj},
 						}},
 				}}}}, false},
 	}
