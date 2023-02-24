@@ -201,6 +201,9 @@ func ParseTestJson(in io.Reader) (result Result, err error) {
 				res.Succeeded++
 			}
 		}
+		sort.Slice(res.Tests, func(i, j int) bool {
+			return !IsLess(res.Tests[i].TestResult, res.Tests[j].TestResult, res.Tests[i].Duration, res.Tests[j].Duration)
+		})
 		result.PackageResult = append(result.PackageResult, res)
 	}
 	sort.Slice(result.PackageResult, func(i, j int) bool {
