@@ -1,4 +1,4 @@
-package testreport_test
+package report_test
 
 import (
 	"bytes"
@@ -8,27 +8,27 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/becheran/go-testreport"
+	"github.com/becheran/go-testreport/internal/report"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestCreateReport(t *testing.T) {
 	var suite = []struct {
-		result   testreport.Result
+		result   report.Result
 		template string
 		out      string
 	}{
-		{testreport.Result{}, "foo bar", "foo bar"},
-		{testreport.Result{Passed: 42}, "foo bar {{.Passed}}", "foo bar 42"},
-		{testreport.Result{Passed: 42, Failed: 12, Skipped: 0, Duration: 120}, `{{.Passed}} {{.Failed}} {{.Skipped}} {{.Duration | printf "%d"}}`, "42 12 0 120"},
-		{testreport.Result{PackageResult: []testreport.PackageResult{
+		{report.Result{}, "foo bar", "foo bar"},
+		{report.Result{Passed: 42}, "foo bar {{.Passed}}", "foo bar 42"},
+		{report.Result{Passed: 42, Failed: 12, Skipped: 0, Duration: 120}, `{{.Passed}} {{.Failed}} {{.Skipped}} {{.Duration | printf "%d"}}`, "42 12 0 120"},
+		{report.Result{PackageResult: []report.PackageResult{
 			{
 				Name:          "foo",
 				Duration:      time.Second * 125,
-				PackageResult: testreport.FTPSSkip,
-				Tests: []testreport.TestResult{
-					{Name: "t1", Duration: time.Minute, TestResult: testreport.FTSFail, Output: []testreport.OutputLine{
+				PackageResult: report.FTPSSkip,
+				Tests: []report.TestResult{
+					{Name: "t1", Duration: time.Minute, TestResult: report.FTSFail, Output: []report.OutputLine{
 						{Time: time.Time{}, Text: "foo"},
 						{Time: time.Time{}, Text: "bar"},
 					}},
@@ -48,7 +48,7 @@ res={{.PackageResult.Icon}}
 			temp, err := template.New("test").Parse(s.template)
 			require.Nil(t, err)
 
-			assert.Nil(t, testreport.CreateReport(s.result, buff, temp))
+			assert.Nil(t, report.CreateReport(s.result, buff, temp))
 
 			fmt.Println(buff.String())
 			assert.Equal(t, s.out, buff.String())
@@ -58,27 +58,27 @@ res={{.PackageResult.Icon}}
 
 func TestCreateDefaultReport(t *testing.T) {
 	var suite = []struct {
-		result testreport.Result
+		result report.Result
 		out    string
 	}{
-		{testreport.Result{
+		{report.Result{
 			Tests:    19,
 			Passed:   12,
 			Skipped:  3,
 			Failed:   4,
 			Duration: time.Second * 124,
-			PackageResult: []testreport.PackageResult{
+			PackageResult: []report.PackageResult{
 				{
 					Name:          "name/p1",
 					Duration:      time.Second * 12,
-					PackageResult: testreport.FTSPass,
+					PackageResult: report.FTSPass,
 					Succeeded:     1,
-					Tests: []testreport.TestResult{
+					Tests: []report.TestResult{
 						{
 							Name:       "t1",
 							Duration:   time.Second,
-							TestResult: testreport.FTPSSkip,
-							Output: []testreport.OutputLine{
+							TestResult: report.FTPSSkip,
+							Output: []report.OutputLine{
 								{Time: time.Time{}, Text: "foo"},
 								{Time: time.Time{}, Text: "bar"},
 							},
@@ -106,12 +106,11 @@ Total: 19 ✔️ Passed: 12 ⏩ Skipped: 3 ❌ Failed: 4 ⏱️ Duration: 2m4s
 	for i, s := range suite {
 		t.Run(fmt.Sprintf("(%d)", i), func(t *testing.T) {
 			buff := bytes.NewBuffer(nil)
-			temp, err := testreport.GetTemplate("")
+			temp, err := report.GetTemplate("")
 			require.Nil(t, err)
-			assert.Nil(t, testreport.CreateReport(s.result, buff, temp))
+			assert.Nil(t, report.CreateReport(s.result, buff, temp))
 
-			fmt.Println(buff.String())
-			assert.Equal(t, s.out, buff.String())
+			assert.Equal(t, s.out, strings.ReplaceAll(buff.String(), "\r\n", "\n"))
 		})
 	}
 }
@@ -120,9 +119,9 @@ func TestCreateReportCustomVars(t *testing.T) {
 	buff := bytes.NewBuffer(nil)
 	temp, err := template.New("test").Parse(`{{.Vars.foo}} {{.Vars.bar}}`)
 	require.Nil(t, err)
-	res := testreport.Result{Vars: map[string]string{"foo": "one", "bar": "other"}}
+	res := report.Result{Vars: map[string]string{"foo": "one", "bar": "other"}}
 
-	assert.Nil(t, testreport.CreateReport(res, buff, temp))
+	assert.Nil(t, report.CreateReport(res, buff, temp))
 
 	fmt.Println(buff.String())
 	assert.Equal(t, `one other`, buff.String())
@@ -142,7 +141,7 @@ func TestPackageName(t *testing.T) {
 	}
 	for _, s := range suite {
 		t.Run(s.name, func(t *testing.T) {
-			p := testreport.PackageName(s.name)
+			p := report.PackageName(s.name)
 			assert.Equal(t, s.path, p.Path())
 			assert.Equal(t, s.pack, p.Package())
 		})
@@ -156,25 +155,25 @@ func TestParseTestJson(t *testing.T) {
 
 	var suite = []struct {
 		json   string
-		result testreport.Result
+		result report.Result
 		isErr  bool
 	}{
-		{"foo bar", testreport.Result{}, true},
-		{"{}", testreport.Result{PackageResult: []testreport.PackageResult{}}, false},
+		{"foo bar", report.Result{}, true},
+		{"{}", report.Result{PackageResult: []report.PackageResult{}}, false},
 		{`{"Time":"` + timeStr + `","Action":"run","Package":"github.com/becheran/go-testreport","Test":"TestIsLess"}
 {"Time":"` + timeStr + `","Action":"pass","Package":"github.com/becheran/go-testreport","Test":"TestIsLess","Elapsed":0}
 {"Time":"` + timeStr + `","Action":"pass","Package":"github.com/becheran/go-testreport","Elapsed":1.117}
 {"Time":"` + timeStr + `","Action":"skip","Package":"github.com/becheran/foo","Elapsed":0}
-`, testreport.Result{Tests: 1, Passed: 1, Duration: time.Second, PackageResult: []testreport.PackageResult{
+`, report.Result{Tests: 1, Passed: 1, Duration: time.Second, PackageResult: []report.PackageResult{
 			{
 				Name:          "github.com/becheran/go-testreport",
 				Duration:      1117000000,
-				PackageResult: testreport.FTSPass,
+				PackageResult: report.FTSPass,
 				Succeeded:     1,
-				Tests: []testreport.TestResult{
+				Tests: []report.TestResult{
 					{Name: "TestIsLess",
-						TestResult: testreport.FTSPass,
-						Output: []testreport.OutputLine{
+						TestResult: report.FTSPass,
+						Output: []report.OutputLine{
 							{Time: timeObj},
 							{Time: timeObj},
 						}},
@@ -182,7 +181,7 @@ func TestParseTestJson(t *testing.T) {
 	}
 	for i, s := range suite {
 		t.Run(fmt.Sprintf("(%d)", i), func(t *testing.T) {
-			res, err := testreport.ParseTestJson(strings.NewReader(s.json))
+			res, err := report.ParseTestJson(strings.NewReader(s.json))
 			if s.isErr {
 				assert.NotNil(t, err)
 				assert.Empty(t, res)
@@ -196,24 +195,24 @@ func TestParseTestJson(t *testing.T) {
 
 func TestPackageResultString(t *testing.T) {
 	var suite = []struct {
-		res testreport.PackageResult
+		res report.PackageResult
 		str string
 	}{
 		{
-			testreport.PackageResult{Name: "github.com/becheran/go-testreport/cmd/TestReport", PackageResult: testreport.FTPSSkip},
+			report.PackageResult{Name: "github.com/becheran/go-testreport/cmd/TestReport", PackageResult: report.FTPSSkip},
 			"?       github.com/becheran/go-testreport/cmd/TestReport [no test files]",
 		},
 		{
-			testreport.PackageResult{Name: "foo", PackageResult: testreport.FTSPass, Duration: time.Second * 130},
+			report.PackageResult{Name: "foo", PackageResult: report.FTSPass, Duration: time.Second * 130},
 			"ok      foo 2m10s",
 		},
 		{
-			testreport.PackageResult{
+			report.PackageResult{
 				Name:          "foo",
-				PackageResult: testreport.FTSFail,
+				PackageResult: report.FTSFail,
 				Duration:      time.Minute * 2,
-				Tests: []testreport.TestResult{
-					{Name: "t1", Duration: time.Minute, TestResult: testreport.FTSFail, Output: []testreport.OutputLine{
+				Tests: []report.TestResult{
+					{Name: "t1", Duration: time.Minute, TestResult: report.FTSFail, Output: []report.OutputLine{
 						{Text: "output_1\n"},
 						{Text: "output_2\n"},
 					}},

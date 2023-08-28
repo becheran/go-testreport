@@ -20,7 +20,7 @@ jobs:
         with:
           version: v1.50.1
 
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -28,9 +28,7 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: 1.18
-      - name: Build
-        run: |
-          go build -v ./cmd/TestReport
-          chmod +x TestReport
+      - name: Install go-testreport
+        run: go install github.com/becheran/go-testreport/@main
       - name: Test
-        run: go test -v ./... -json | ./TestReport >> $GITHUB_STEP_SUMMARY
+        run: go test -v ./... -json | ./testreport 2>> $GITHUB_STEP_SUMMARY

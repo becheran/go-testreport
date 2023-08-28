@@ -6,8 +6,8 @@ Generate a markdown test report from the go json test result
 
 Matches perfectly with [github job summaries](https://github.blog/2022-05-09-supercharging-github-actions-with-job-summaries/) to visualize *go* test results
 
-Install 
+Install
 
 ``` cmd
-go install github.com/becheran/go-testreport/cmd/TestReport@main
+go install github.com/becheran/go-testreport@main
 ```

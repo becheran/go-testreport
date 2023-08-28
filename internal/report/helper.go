@@ -1,4 +1,4 @@
-package testreport
+package report
 
 import (
 	"html"
