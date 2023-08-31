@@ -16,6 +16,16 @@ func main() {
 	flag.StringVar(&templateFile, "template", "", "Template file for the report generation. If not set, the default template will be applied")
 	flag.StringVar(&vars, "vars", "", "Comma separated list of custom variables which can be used in the template. For example -vars=version:1.2.4,build:42")
 	flag.Parse()
+	if flag.NArg() != 1 {
+		flag.Usage()
+		os.Exit(1)
+	}
+	filepath := flag.Args()[0]
+	file, err := os.OpenFile(filepath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+	if err != nil {
+		log.Fatalf("Failed to open file %s. %s", filepath, err)
+	}
+	defer file.Close()
 
 	tmp, err := report.GetTemplate(templateFile)
 	if err != nil {
@@ -32,7 +42,7 @@ func main() {
 		log.Fatalf("Failed to parse variables. %s", err)
 	}
 
-	if err := report.CreateReport(result, os.Stderr, tmp); err != nil {
+	if err := report.CreateReport(result, file, tmp); err != nil {
 		log.Fatalf("Failed to create test report. %s", err)
 	}
 
