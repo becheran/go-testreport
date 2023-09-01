@@ -20,7 +20,7 @@ jobs:
         with:
           version: v1.50.1
 
-  test:
+  test-linux:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -31,4 +31,17 @@ jobs:
       - name: Install go-testreport
         run: go install github.com/becheran/go-testreport@main
       - name: Test
-        run: go test -v ./... -json | go-testreport $GITHUB_STEP_SUMMARY
+        run: go test ./... -json | go-testreport $GITHUB_STEP_SUMMARY
+
+  test-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+      - name: Install go-testreport
+        run: go install github.com/becheran/go-testreport@main
+      - name: Test
+        run: go test ./... -json | go-testreport $GITHUB_STEP_SUMMARY
