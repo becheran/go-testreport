@@ -44,4 +44,4 @@ jobs:
       - name: Install go-testreport
         run: go install github.com/becheran/go-testreport@main
       - name: Test
-        run: go test ./... -json | go-testreport $GITHUB_STEP_SUMMARY
+        run: go test ./... -json | go-testreport $env:GITHUB_STEP_SUMMARY
