@@ -46,11 +46,9 @@ func main() {
 		log.Fatalf("Failed to create test report. %s", err)
 	}
 
-	report.PrintResult(result)
-
 	failed := false
 	for _, packRes := range result.PackageResult {
-		fmt.Fprintf(os.Stderr, "%s\n", packRes)
+		fmt.Println(packRes)
 		if packRes.PackageResult == report.FTSFail {
 			failed = true
 		}

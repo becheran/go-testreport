@@ -219,24 +219,3 @@ func CreateReport(result Result, out io.Writer, temp *template.Template) (err er
 	}
 	return temp.Execute(out, result)
 }
-
-func PrintResult(result Result) {
-	for _, res := range result.PackageResult {
-		switch res.PackageResult {
-		case FTSFail:
-			for _, test := range res.Tests {
-				if test.TestResult == FTSFail {
-					fmt.Printf("--- FAIL: %s\n", test.Name)
-					for _, line := range test.Output {
-						fmt.Println(line.Text)
-					}
-				}
-			}
-			fmt.Printf("FAIL    %s\n", res.Name)
-		case FTPSSkip:
-			fmt.Printf("?       %s\n", res.Name)
-		case FTSPass:
-			fmt.Printf("ok      %s\n", res.Name)
-		}
-	}
-}
