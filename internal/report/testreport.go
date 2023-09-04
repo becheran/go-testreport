@@ -2,6 +2,7 @@ package report
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -143,6 +144,10 @@ func ParseTestJson(in io.Reader) (result Result, err error) {
 	scanner := bufio.NewScanner(in)
 	for scanner.Scan() {
 		line := scanner.Bytes()
+		// Ignore Byte Order Mark (BOM)
+		// https://stackoverflow.com/questions/31398044/got-error-invalid-character-%C3%AF-looking-for-beginning-of-value-from-json-unmar
+		line = bytes.TrimPrefix(line, []byte{239, 187, 191})
+
 		var evt TestEvent
 		if err := json.Unmarshal(line, &evt); err != nil {
 			return Result{}, err
