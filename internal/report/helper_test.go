@@ -53,6 +53,7 @@ func TestEscapeMarkdown(t *testing.T) {
 		{"`code`", "\\`code\\`"},
 		{" ", "&nbsp;"},
 		{"	", "&nbsp;&nbsp;&nbsp;&nbsp;"},
+		{"<details></details>", "&lt;details&gt;&lt;/details&gt;"},
 	}
 	for _, s := range suite {
 		t.Run(fmt.Sprintf("%s => %s", s.mdIn, s.escaped), func(t *testing.T) {

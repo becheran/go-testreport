@@ -91,15 +91,12 @@ func TestCreateDefaultReport(t *testing.T) {
 
 Total: 19 ✔️ Passed: 12 ⏩ Skipped: 3 ❌ Failed: 4 ⏱️ Duration: 2m4s
 
-<details><summary>✔️ 1/1 name/<b>p1</b> 12s</summary>
+<details>
+    <summary>✔️ 1/1 name/<b>p1</b> 12s</summary>
+        
+<blockquote>⏩ t1 1s</blockquote>
 
-<blockquote><details><summary>⏩ t1 1s</summary><blockquote>
-
-` + "`" + `00:00:00.000` + "`" + ` foo
-
-` + "`" + `00:00:00.000` + "`" + ` bar
-
-</blockquote></details></blockquote></details>
+</details>
 `,
 		},
 	}

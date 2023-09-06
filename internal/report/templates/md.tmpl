@@ -1,11 +1,17 @@
 # Test Report
 
 Total: {{.Tests}} ✔️ Passed: {{.Passed}} ⏩ Skipped: {{.Skipped}} ❌ Failed: {{.Failed}} ⏱️ Duration: {{.Duration}}
-
-{{range .PackageResult}}<details><summary>{{.PackageResult.Icon}} {{.Succeeded}}/{{len .Tests}} {{.Name.Path}}<b>{{.Name.Package}}</b> {{.Duration}}</summary>
-
-{{range .Tests}}<blockquote><details><summary>{{.TestResult.Icon}} {{.Name}} {{.Duration}}</summary><blockquote>
-
-{{range .Output}}`{{.Time.Format "15:04:05.000"}}` {{EscapeMarkdown .Text}}
-
-{{end}}</blockquote></details></blockquote>{{end}}</details>{{end}}
+{{range .PackageResult}}
+<details>
+    <summary>{{.PackageResult.Icon}} {{.Succeeded}}/{{len .Tests}} {{.Name.Path}}<b>{{.Name.Package}}</b> {{.Duration}}</summary>
+        {{range .Tests}}{{if eq .TestResult 2}}<blockquote>
+            <details>
+                <summary>{{.TestResult.Icon}} {{EscapeMarkdown .Name}} {{.Duration}}</summary>
+                <blockquote>
+{{range .Output}}`{{.Time.Format "15:04:05.000"}}` {{EscapeMarkdown .Text}}{{end}}
+                </blockquote>
+            </details>
+        </blockquote>{{else}}
+<blockquote>{{.TestResult.Icon}} {{EscapeMarkdown .Name}} {{.Duration}}</blockquote>{{end}}
+{{end}}
+</details>{{end}}

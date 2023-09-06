@@ -26,6 +26,9 @@ func EscapeMarkdown(input string) (escapedMarkdown string) {
 		"`", "\\`",
 		" ", NonBreakingSpace,
 		"	", NonBreakingSpace+NonBreakingSpace+NonBreakingSpace+NonBreakingSpace,
+		// Following are html escapes until HTML5.
+		`<`, "&lt;",
+		`>`, "&gt;",
 	)
 	return replacer.Replace(input)
 }
