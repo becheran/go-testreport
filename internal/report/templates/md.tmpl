@@ -8,10 +8,8 @@ Total: {{.Tests}} ✔️ Passed: {{.Passed}} ⏩ Skipped: {{.Skipped}} ❌ Faile
             <details>
                 <summary>{{.TestResult.Icon}} {{EscapeMarkdown .Name}} {{.Duration}}</summary>
                 <blockquote>
-{{range .Output}}`{{.Time.Format "15:04:05.000"}}` {{EscapeMarkdown .Text}}{{end}}
-                </blockquote>
-            </details>
-        </blockquote>{{else}}
-<blockquote>{{.TestResult.Icon}} {{EscapeMarkdown .Name}} {{.Duration}}</blockquote>{{end}}
-{{end}}
+
+{{range .Output}}{{if ne .Text ""}}`{{.Time.Format "15:04:05.000"}}` {{EscapeMarkdown .Text}}{{end}}{{end}}</blockquote>
+</details></blockquote>{{else}}
+<blockquote>{{.TestResult.Icon}} {{EscapeMarkdown .Name}} {{.Duration}}  </blockquote>{{end}}{{end}}
 </details>{{end}}

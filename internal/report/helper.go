@@ -24,6 +24,7 @@ func EscapeMarkdown(input string) (escapedMarkdown string) {
 		"]", "\\]",
 		"\\", "\\\\",
 		"`", "\\`",
+		"\n", "  \n",
 		" ", NonBreakingSpace,
 		"	", NonBreakingSpace+NonBreakingSpace+NonBreakingSpace+NonBreakingSpace,
 		// Following are html escapes until HTML5.
