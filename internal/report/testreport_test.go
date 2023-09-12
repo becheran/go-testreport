@@ -94,8 +94,7 @@ Total: 19 ✔️ Passed: 12 ⏩ Skipped: 3 ❌ Failed: 4 ⏱️ Duration: 2m4s
 <details>
     <summary>✔️ 1/1 name/<b>p1</b> 12s</summary>
         
-<blockquote>⏩ t1 1s</blockquote>
-
+<blockquote>⏩ t1 1s  </blockquote>
 </details>
 `,
 		},
