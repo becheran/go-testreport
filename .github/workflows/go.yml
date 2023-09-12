@@ -45,3 +45,15 @@ jobs:
         run: go install github.com/becheran/go-testreport@main
       - name: Test
         run: go test ./... -json | go-testreport -vars="Title:Test Report Windows" $env:GITHUB_STEP_SUMMARY
+
+  release:  
+    runs-on: ubuntu-latest  
+    steps:
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v5
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
