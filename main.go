@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime/debug"
 
 	"github.com/becheran/go-testreport/internal/args"
 	"github.com/becheran/go-testreport/internal/report"
@@ -12,6 +13,10 @@ import (
 
 func main() {
 	flag.Usage = func() {
+		info, ok := debug.ReadBuildInfo()
+		if ok {
+			fmt.Printf("go-testreport (Version: %s)", info.Main.Version)
+		}
 		fmt.Fprintf(os.Stderr, "Usage %s [<options>] <file>:\n", os.Args[0])
 		flag.PrintDefaults()
 	}
