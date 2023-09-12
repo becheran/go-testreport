@@ -12,9 +12,9 @@ func ParseCommaSeparatedList(input string) (result map[string]string, err error)
 		if arg == "" {
 			continue
 		}
-		varVal := strings.Split(arg, "=")
+		varVal := strings.Split(arg, ":")
 		if len(varVal) != 2 {
-			return nil, fmt.Errorf("expected variable and value separated with an '=' sign")
+			return nil, fmt.Errorf("expected variable and value separated with an ':' sign")
 		}
 		if varVal[0] == "" {
 			return nil, fmt.Errorf("key must not be empty")

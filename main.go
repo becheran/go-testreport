@@ -11,10 +11,15 @@ import (
 )
 
 func main() {
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage %s [<options>] <file>:\n", os.Args[0])
+		flag.PrintDefaults()
+	}
+
 	var templateFile string
 	var vars string
 	flag.StringVar(&templateFile, "template", "", "Template file for the report generation. If not set, the default template will be applied")
-	flag.StringVar(&vars, "vars", "", "Comma separated list of custom variables which can be used in the template. For example -vars=version:1.2.4,build:42")
+	flag.StringVar(&vars, "vars", "", "Comma separated list of custom variables which can be used in the template. For example -vars=\"Title:Custom Title\"")
 	flag.Parse()
 	if flag.NArg() != 1 {
 		flag.Usage()

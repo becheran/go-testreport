@@ -31,7 +31,7 @@ jobs:
       - name: Install go-testreport
         run: go install github.com/becheran/go-testreport@main
       - name: Test
-        run: go test ./... -json | go-testreport $GITHUB_STEP_SUMMARY
+        run: go test ./... -json | go-testreport -vars="Title:Test Report Linux" $GITHUB_STEP_SUMMARY
 
   test-windows:
     runs-on: windows-latest
@@ -44,4 +44,4 @@ jobs:
       - name: Install go-testreport
         run: go install github.com/becheran/go-testreport@main
       - name: Test
-        run: go test ./... -json | go-testreport $env:GITHUB_STEP_SUMMARY
+        run: go test ./... -json | go-testreport -vars="Title:Test Report Windows" $env:GITHUB_STEP_SUMMARY

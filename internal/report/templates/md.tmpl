@@ -1,4 +1,4 @@
-# Test Report
+# {{if .Vars.Title}}{{.Vars.Title}}{{else}}Test Report{{end}}
 
 Total: {{.Tests}} ✔️ Passed: {{.Passed}} ⏩ Skipped: {{.Skipped}} ❌ Failed: {{.Failed}} ⏱️ Duration: {{.Duration}}
 {{range .PackageResult}}
