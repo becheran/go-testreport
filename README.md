@@ -24,8 +24,8 @@ The default output sorts the tests to show failing and slow tests at the top.
 
 Install via the go install command:
 
-``` cmd
-go install github.com/becheran/go-testreport
+``` sh
+go install github.com/becheran/go-testreport@latest
 ```
 
 Or use the pre-compiled binaries from [github releases](https://github.com/becheran/go-testreport/releases).
@@ -34,12 +34,12 @@ Or use the pre-compiled binaries from [github releases](https://github.com/beche
 
 Will use the standard input and return the result into a file:
 
-```bash
+``` sh
 go test ./... -json | go-testreport $GITHUB_STEP_SUMMARY
 ```
 
 Customize by providing a own template file. See also the [default markdown template](./internal/report/templates/md.tmpl). With the `vars` options custom values can be passed to the template from the outside:
 
-```bash
+``` sh
 go test ./... -json | go-testreport -template=./html.tmpl -vars="Title:Test Report Linux" $GITHUB_STEP_SUMMARY
 ```
