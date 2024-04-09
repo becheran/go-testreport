@@ -154,7 +154,7 @@ func TestParseTestJson(t *testing.T) {
 		result report.Result
 		isErr  bool
 	}{
-		{"foo bar", report.Result{}, true},
+		{"foo bar", report.Result{PackageResult: []report.PackageResult{}}, false},
 		{"{}", report.Result{PackageResult: []report.PackageResult{}}, false},
 		{`{"Time":"` + timeStr + `","Action":"run","Package":"github.com/becheran/go-testreport","Test":"TestIsLess"}
 {"Time":"` + timeStr + `","Action":"pass","Package":"github.com/becheran/go-testreport","Test":"TestIsLess","Elapsed":0}

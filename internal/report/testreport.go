@@ -150,7 +150,8 @@ func ParseTestJson(in io.Reader) (result Result, err error) {
 
 		var evt TestEvent
 		if err := json.Unmarshal(line, &evt); err != nil {
-			return Result{}, err
+			// Ignore parse errors
+			continue
 		}
 		if _, packageExists := packageResult[evt.Package]; !packageExists {
 			res := PackageResult{
