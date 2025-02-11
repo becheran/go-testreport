@@ -1,4 +1,4 @@
-# Test Report
+# Go Test Report
 
 [![Pipeline Status](https://github.com/becheran/go-testreport/actions/workflows/go.yml/badge.svg)](https://github.com/becheran/go-testreport/actions/workflows/go.yml)
 [![Go Report Card][go-report-image]][go-report-url]
@@ -14,13 +14,15 @@
 
 Generate a markdown test report from the go json test result.
 
-Matches perfectly with [github job summaries](https://github.blog/2022-05-09-supercharging-github-actions-with-job-summaries/) to visualize *go* test results:
+Matches perfectly with [github job summaries](https://github.blog/2022-05-09-supercharging-github-actions-with-job-summaries/) to visualize test results:
 
 ![ReportExample](./doc/GitHubReport.png)
 
-The default output sorts the tests to show failing and slow tests at the top.
+The default output sorts the tests by failing and slowest execution time.
 
 ## Install
+
+### Go
 
 Install via the go install command:
 
@@ -28,11 +30,13 @@ Install via the go install command:
 go install github.com/becheran/go-testreport@latest
 ```
 
-Or use the pre-compiled binaries from [github releases](https://github.com/becheran/go-testreport/releases).
+### Binaries
 
-## Run
+Or use the pre-compiled binaries for Linux, Windows, and Mac OS from the [github releases page](https://github.com/becheran/go-testreport/releases).
 
-Will use the standard input and return the result into a file:
+## Usage
+
+Will use the standard input and return the result into a file. By using the `$GITHUB_STEP_SUMMARY` in a GitHub actions run, the html-output will be printed as summary in the actions run:
 
 ``` sh
 go test ./... -json | go-testreport $GITHUB_STEP_SUMMARY
