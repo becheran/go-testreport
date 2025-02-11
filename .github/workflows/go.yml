@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/setup-go@v5
         with:
-          go-version: 1.18
+          go-version: 1.22
       - uses: actions/checkout@v4
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
@@ -33,7 +33,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.18
+          go-version: 1.22
       - name: Install go-testreport
         run: go install github.com/becheran/go-testreport@main
       - name: Test
@@ -45,7 +45,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.18
+          go-version: 1.22
       - name: Install go-testreport
         run: go install github.com/becheran/go-testreport@main
       - name: Test
@@ -58,7 +58,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.18
+          go-version: 1.22
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
         with:
