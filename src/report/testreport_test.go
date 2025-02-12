@@ -8,7 +8,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/becheran/go-testreport/internal/report"
+	"github.com/becheran/go-testreport/src/report"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

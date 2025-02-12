@@ -2,16 +2,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Connect to server",
+            "name": "Run",
             "type": "go",
             "request": "launch",
-            "mode": "remote",
-            "remotePath": "cmd/TestReport",
-            "port": 2345,
-            "host": "127.0.0.1",
-            "program": "cmd/TestReport",
-            "env": {},
-            "args": []
+            "mode": "auto",
+            "program": "./main.go",
+            "args": ["-input", "test.json", "-output", "result.html"],
         }
     ]
 }

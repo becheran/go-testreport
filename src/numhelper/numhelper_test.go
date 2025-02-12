@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/becheran/go-testreport/internal/numhelper"
+	"github.com/becheran/go-testreport/src/numhelper"
 	"github.com/stretchr/testify/assert"
 )
 
