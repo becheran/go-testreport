@@ -1,0 +1,33 @@
+name: "Go Test Report"
+description: "Write test report in markdown format"
+inputs:
+  input:
+    description: "Test report json file path"
+    required: true
+  output:
+    description: "Output file path"
+    required: true
+  template:
+    description: "Template file. Default will be used if empty"
+    required: false
+  templateVariables:
+    description: "Variables for template files. Default will be used if empty"
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - name: "Set up Go"
+      uses: actions/setup-go@v5
+      with:
+        go-version: 1.23
+    - name: "Install go-testreport"
+      shell: bash
+      run: |
+        cd $GITHUB_ACTION_PATH
+        go install ./
+    - name: "Create Report"
+      shell: bash
+      run: go-testreport -vars="${{ inputs.templateVariables }}" -template="${{ inputs.template }}" -input="${{ inputs.input }}" -output="${{ inputs.output }}"
+branding:
+  icon: "check-circle"
+  color: "blue"
