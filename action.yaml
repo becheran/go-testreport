@@ -1,5 +1,5 @@
-name: "Go Test Report"
-description: "Write test report in markdown format"
+name: "Golang Test Report"
+description: "Parse Golang json test report and generate a human readable summary"
 inputs:
   input:
     description: "Test report json file path"
