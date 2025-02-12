@@ -5,8 +5,9 @@ inputs:
     description: "Test report json file path"
     required: true
   output:
-    description: "Output file path"
-    required: true
+    description: "Output file path. Default is $GITHUB_STEP_SUMMARY which is the default output for GitHub Actions"
+    default: "$GITHUB_STEP_SUMMARY"
+    required: false
   template:
     description: "Template file. Default will be used if empty"
     required: false
