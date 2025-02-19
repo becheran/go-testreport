@@ -43,7 +43,7 @@ func main() {
 		}
 	}
 
-	if failed {
+	if args.NonZeroExitOnFailure && failed {
 		os.Exit(1)
 	}
 }

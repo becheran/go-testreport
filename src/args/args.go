@@ -9,10 +9,11 @@ import (
 )
 
 type Args struct {
-	TemplateFile string
-	OutputStream io.WriteCloser
-	InputStream  io.ReadCloser
-	EnvArgs      map[string]string
+	TemplateFile         string
+	OutputStream         io.WriteCloser
+	InputStream          io.ReadCloser
+	EnvArgs              map[string]string
+	NonZeroExitOnFailure bool
 }
 
 func ParseArgs(cmdArgs []string, fs *flag.FlagSet) (result Args, err error) {
@@ -39,6 +40,7 @@ func ParseArgs(cmdArgs []string, fs *flag.FlagSet) (result Args, err error) {
 		if err != nil {
 			return Args{}, fmt.Errorf("failed to open input file %s. %s", inputFile, err)
 		}
+		result.NonZeroExitOnFailure = true
 	} else {
 		result.InputStream = os.Stdin
 	}
