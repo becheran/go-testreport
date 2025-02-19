@@ -4,6 +4,7 @@
 [![Go Report Card][go-report-image]][go-report-url]
 [![PRs Welcome][pr-welcome-image]][pr-welcome-url]
 [![License][license-image]][license-url]
+[![GHAction][gh-action-image]][gh-action-url]
 
 [license-url]: https://github.com/becheran/go-testreport/blob/main/LICENSE
 [license-image]: https://img.shields.io/badge/License-MIT-brightgreen.svg
@@ -11,6 +12,8 @@
 [go-report-url]: https://goreportcard.com/report/github.com/becheran/go-testreport
 [pr-welcome-image]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
 [pr-welcome-url]: https://github.com/becheran/go-testreport/blob/main/CONTRIBUTING.md
+[gh-action-image]: https://img.shields.io/badge/Get-GH_Action-blue
+[gh-action-url]: https://github.com/marketplace/actions/golang-test-report
 
 Generate a markdown test report from the go json test result.
 
@@ -66,8 +69,13 @@ go test ./... -json | go-testreport -template=./html.tmpl -vars="Title:Test Repo
 
 ### GitHub Actions
 
-By using the `$GITHUB_STEP_SUMMARY` in a GitHub actions run, the html-output will be printed as summary in the actions run:
+The [Golang Test Report](https://github.com/marketplace/actions/golang-test-report) from the marketplace can be used to integrate the go-testreport tool into an GitHub workflow:
 
-``` sh
-go-testreport -input result.json -output $GITHUB_STEP_SUMMARY
+``` yaml
+- name: Test
+  run: go test ./... -json > report.json
+- name: Report
+  uses: becheran/go-testreport@main
+  with:
+    input: report.json
 ```
