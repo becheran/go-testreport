@@ -37,6 +37,7 @@ func TestParseArgs_Files_UseFiles(t *testing.T) {
 	require.Nil(t, err)
 	res.InputStream.Close()
 	assert.Equal(t, "test", string(readBytes))
+	assert.True(t, res.NonZeroExitOnFailure)
 }
 
 func TestParseArgs_CommaSeparatedList_ExpectedOutput(t *testing.T) {
