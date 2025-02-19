@@ -17,7 +17,49 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: "Check Go version"
+      id: go-version-check
+      shell: bash
+      run: |
+        semver () {
+            if [[ $1 == $2 ]]
+            then
+                return 0
+            fi
+            local IFS=.
+            local i ver1=($1) ver2=($2)
+            # fill empty fields in ver1 with zeros
+            for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+            do
+                ver1[i]=0
+            done
+            for ((i=0; i<${#ver1[@]}; i++))
+            do
+                if ((10#${ver1[i]:=0} > 10#${ver2[i]:=0}))
+                then
+                    return 1
+                fi
+                if ((10#${ver1[i]} < 10#${ver2[i]}))
+                then
+                    return 2
+                fi
+            done
+            return 0
+        }
+
+        if go version &>/dev/null; then
+            INSTALLED_GO_VERSION=$(go version | awk '{print $3}' | sed 's/go//')
+            semver $INSTALLED_GO_VERSION 1.18
+            if [ $? -lt 2 ]; then
+                echo "setup-go-required=false"
+            else
+                echo "setup-go-required=true"
+            fi
+        else
+            echo "setup-go-required=true"
+        fi
     - name: "Set up Go"
+      if: env.setup-go-required == 'true'
       uses: actions/setup-go@v5
       with:
         go-version: 1.23
