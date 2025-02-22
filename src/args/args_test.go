@@ -16,6 +16,7 @@ func TestParseArgs_NoFile_UseStdOutAndIn(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, os.Stdout, res.OutputStream)
 	assert.Equal(t, os.Stdin, res.InputStream)
+	assert.True(t, res.NonZeroExitOnFailure)
 }
 
 func TestParseArgs_Files_UseFiles(t *testing.T) {
@@ -37,7 +38,7 @@ func TestParseArgs_Files_UseFiles(t *testing.T) {
 	require.Nil(t, err)
 	res.InputStream.Close()
 	assert.Equal(t, "test", string(readBytes))
-	assert.True(t, res.NonZeroExitOnFailure)
+	assert.False(t, res.NonZeroExitOnFailure)
 }
 
 func TestParseArgs_CommaSeparatedList_ExpectedOutput(t *testing.T) {

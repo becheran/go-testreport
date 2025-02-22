@@ -40,8 +40,8 @@ func ParseArgs(cmdArgs []string, fs *flag.FlagSet) (result Args, err error) {
 		if err != nil {
 			return Args{}, fmt.Errorf("failed to open input file %s. %s", inputFile, err)
 		}
-		result.NonZeroExitOnFailure = true
 	} else {
+		result.NonZeroExitOnFailure = true
 		result.InputStream = os.Stdin
 	}
 
