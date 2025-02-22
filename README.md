@@ -47,13 +47,13 @@ go-testreport -h
 
 ### Input and Output
 
-When `-input` and `-output` is not set, the stdin stream will be used and return the result will be written to stdout:
+When `-input` and `-output` is not set, the stdin stream will be used and return the result will be written to stdout. Will exit with a non zero exit code if at least one test failed:
 
 ``` sh
 go test ./... -json | go-testreport > result.html
 ```
 
-Use the `-input` and `-output` file to set files for the input and output:
+Use the `-input` and `-output` file to set files for the input and output. Will always exit with zero also if tests fail:
 
 ``` sh
 go-testreport -input result.json -output result.html
