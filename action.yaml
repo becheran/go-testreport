@@ -28,7 +28,7 @@ runs:
         fi
     - name: "Set up Go"
       if: env.setup-go-required == 'true'
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@v7
       with:
         go-version: 1.23
     - name: "Install go-testreport"
