@@ -18,8 +18,8 @@ type Args struct {
 
 func ParseArgs(cmdArgs []string, fs *flag.FlagSet) (result Args, err error) {
 	fs.Usage = func() {
-		fmt.Printf("go-testreport [<options>]")
-		flag.PrintDefaults()
+		fmt.Fprintln(fs.Output(), "go-testreport [<options>]")
+		fs.PrintDefaults()
 	}
 
 	var vars, inputFile, outputFile string
@@ -72,17 +72,17 @@ func parseCommaSeparatedList(input string) (result map[string]string, err error)
 		if arg == "" {
 			continue
 		}
-		varVal := strings.Split(arg, ":")
-		if len(varVal) != 2 {
+		key, val, found := strings.Cut(arg, ":")
+		if !found {
 			return nil, fmt.Errorf("expected variable and value separated with an ':' sign")
 		}
-		if varVal[0] == "" {
+		if key == "" {
 			return nil, fmt.Errorf("key must not be empty")
 		}
-		if _, ok := result[varVal[0]]; ok {
-			return nil, fmt.Errorf("variable %s can only be assigned once", varVal[0])
+		if _, ok := result[key]; ok {
+			return nil, fmt.Errorf("variable %s can only be assigned once", key)
 		}
-		result[varVal[0]] = varVal[1]
+		result[key] = val
 	}
 	return
 }

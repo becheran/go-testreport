@@ -52,13 +52,12 @@ func TestParseArgs_CommaSeparatedList_ExpectedOutput(t *testing.T) {
 		{"v:a,b:z", map[string]string{"v": "a", "b": "z"}, false},
 		{"v:a,,bar:baz", map[string]string{"v": "a", "bar": "baz"}, false},
 		{"a:b,b:,c:2", map[string]string{"a": "b", "b": "", "c": "2"}, false},
+		{"f:b:a", map[string]string{"f": "b:a"}, false},
+		{"Url:https://example.com", map[string]string{"Url": "https://example.com"}, false},
 
 		{"f", nil, true},
 		{":12", nil, true},
-		{"f:b:a", nil, true},
 		{"f:b,:1", nil, true},
-		{"a:1,a:2", nil, true},
-		{"a:1,a:2", nil, true},
 		{"a:1,a:2", nil, true},
 	}
 	file, err := os.Create(t.TempDir() + "/file")

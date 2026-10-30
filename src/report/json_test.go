@@ -28,3 +28,14 @@ func TestUnmarshalTestAction(t *testing.T) {
 		Output:  "    --- PASS: TestIsMatch/___#04 (0.00s)\n",
 	})
 }
+
+func TestTestActionString(t *testing.T) {
+	assert.Equal(t, "unknown", report.TAUnknown.String())
+	assert.Equal(t, "run", report.TARun.String())
+	assert.Equal(t, "skip", report.TASkip.String())
+	assert.Equal(t, "build-fail", report.TABuildFail.String())
+	assert.Equal(t, "unknown", report.TestAction(255).String())
+	for _, ta := range []report.TestAction{report.TARun, report.TAPass, report.TAFail, report.TAStart, report.TABuildOutput} {
+		assert.Equal(t, ta, report.TestActionFromString(ta.String()))
+	}
+}

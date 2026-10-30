@@ -8,23 +8,26 @@ import (
 type TestAction uint8
 
 const (
-	TAUnknown TestAction = iota
-	TARun                // the test has started running
-	TAPause              // the test has been paused
-	TACont               // the test has continued running
-	TAPass               // the test passed
-	TABench              // the benchmark printed log output but did not fail
-	TAFail               // the test or benchmark failed
-	TAOutput             // the test printed output
-	TASkip               // the test was skipped or the package contained no tests
+	TAUnknown     TestAction = iota
+	TARun                    // the test has started running
+	TAPause                  // the test has been paused
+	TACont                   // the test has continued running
+	TAPass                   // the test passed
+	TABench                  // the benchmark printed log output but did not fail
+	TAFail                   // the test or benchmark failed
+	TAOutput                 // the test printed output
+	TASkip                   // the test was skipped or the package contained no tests
+	TAStart                  // the test binary is about to be executed
+	TABuildOutput            // the toolchain printed build output
+	TABuildFail              // the build failed
 )
 
-var taStrings = []string{"run", "pause", "cont", "pass", "bench", "fail", "output", "skip"}
+var taStrings = []string{"run", "pause", "cont", "pass", "bench", "fail", "output", "skip", "start", "build-output", "build-fail"}
 
 func (ta TestAction) String() string {
 	idx := int(ta) - 1
-	if idx < 0 && idx < len(taStrings) {
-		return taStrings[ta-1]
+	if idx >= 0 && idx < len(taStrings) {
+		return taStrings[idx]
 	}
 	return "unknown"
 }

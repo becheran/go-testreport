@@ -3,10 +3,11 @@ package report
 import (
 	"bufio"
 	"bytes"
+	"cmp"
 	"encoding/json"
 	"fmt"
 	"io"
-	"sort"
+	"slices"
 	"strings"
 	"text/template"
 	"time"
@@ -142,6 +143,8 @@ func ParseTestJson(in io.Reader) (result Result, err error) {
 	packageResult := make(map[string]*PackageResult)
 	testResultForPackage := make(map[string]map[string]*TestResult)
 	scanner := bufio.NewScanner(in)
+	// Test output lines can be very long. Allow lines up to 64 MiB.
+	scanner.Buffer(make([]byte, 0, 64*1024), 64*1024*1024)
 	for scanner.Scan() {
 		line := scanner.Bytes()
 		// Ignore Byte Order Mark (BOM)
@@ -164,9 +167,9 @@ func ParseTestJson(in io.Reader) (result Result, err error) {
 		if evt.Test == "" {
 			if status := FinalTestStatusFromAction(evt.Action); status != nil {
 				packageResult[evt.Package].PackageResult = *status
-				result.Duration += time.Second * time.Duration(evt.ElapsedSec)
+				packageResult[evt.Package].Duration = time.Duration(float64(time.Second) * evt.ElapsedSec)
+				result.Duration += packageResult[evt.Package].Duration
 			}
-			packageResult[evt.Package].Duration = time.Duration(float64(time.Second) * evt.ElapsedSec)
 		} else {
 			if testRes, testExists := testResultForPackage[evt.Package][evt.Test]; testExists {
 				testRes.Output = append(testRes.Output, OutputLine{Time: evt.Time, Text: evt.Output})
@@ -191,6 +194,9 @@ func ParseTestJson(in io.Reader) (result Result, err error) {
 			}
 		}
 	}
+	if err := scanner.Err(); err != nil {
+		return Result{}, fmt.Errorf("failed to read test result. %w", err)
+	}
 	result.Tests = result.Skipped + result.Failed + result.Passed
 	result.PackageResult = make([]PackageResult, 0, len(packageResult))
 	for _, val := range packageResult {
@@ -207,16 +213,27 @@ func ParseTestJson(in io.Reader) (result Result, err error) {
 				res.Succeeded++
 			}
 		}
-		sort.Slice(res.Tests, func(i, j int) bool {
-			return !IsLess(res.Tests[i].TestResult, res.Tests[j].TestResult, res.Tests[i].Duration, res.Tests[j].Duration)
+		slices.SortFunc(res.Tests, func(a, b TestResult) int {
+			return compareResult(a.TestResult, b.TestResult, a.Duration, b.Duration, a.Name, b.Name)
 		})
 		result.PackageResult = append(result.PackageResult, res)
 	}
-	sort.Slice(result.PackageResult, func(i, j int) bool {
-		return !IsLess(result.PackageResult[i].PackageResult, result.PackageResult[j].PackageResult,
-			result.PackageResult[i].Duration, result.PackageResult[j].Duration)
+	slices.SortFunc(result.PackageResult, func(a, b PackageResult) int {
+		return compareResult(a.PackageResult, b.PackageResult, a.Duration, b.Duration, string(a.Name), string(b.Name))
 	})
 	return result, nil
+}
+
+// compareResult orders failed before passed before skipped results, then
+// slower before faster ones. Ties are broken by name for a deterministic order.
+func compareResult(aStatus, bStatus FinalTestStatus, aDuration, bDuration time.Duration, aName, bName string) int {
+	if IsLess(bStatus, aStatus, bDuration, aDuration) {
+		return -1
+	}
+	if IsLess(aStatus, bStatus, aDuration, bDuration) {
+		return 1
+	}
+	return cmp.Compare(aName, bName)
 }
 
 func CreateReport(result Result, out io.Writer, temp *template.Template) (err error) {

@@ -13,6 +13,7 @@ import (
 func main() {
 	args, err := args.ParseArgs(os.Args, flag.CommandLine)
 	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -37,7 +38,8 @@ func main() {
 
 	failed := false
 	for _, packRes := range result.PackageResult {
-		fmt.Println(packRes)
+		// Print to stderr to not mix the summary into the report when writing to stdout
+		fmt.Fprintln(os.Stderr, packRes)
 		if packRes.PackageResult == report.FTSFail {
 			failed = true
 		}
