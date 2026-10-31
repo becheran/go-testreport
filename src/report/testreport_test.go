@@ -160,7 +160,7 @@ func TestParseTestJson(t *testing.T) {
 {"Time":"` + timeStr + `","Action":"pass","Package":"github.com/becheran/go-testreport","Test":"TestIsLess","Elapsed":0}
 {"Time":"` + timeStr + `","Action":"pass","Package":"github.com/becheran/go-testreport","Elapsed":1.117}
 {"Time":"` + timeStr + `","Action":"skip","Package":"github.com/becheran/foo","Elapsed":0}
-`, report.Result{Tests: 1, Passed: 1, Duration: time.Second, PackageResult: []report.PackageResult{
+`, report.Result{Tests: 1, Passed: 1, Duration: 1117 * time.Millisecond, PackageResult: []report.PackageResult{
 			{
 				Name:          "github.com/becheran/go-testreport",
 				Duration:      1117000000,
@@ -221,5 +221,44 @@ func TestPackageResultString(t *testing.T) {
 		t.Run(s.str, func(t *testing.T) {
 			assert.Equal(t, s.str, s.res.String())
 		})
+	}
+}
+
+func TestParseTestJson_LongLine(t *testing.T) {
+	longOutput := strings.Repeat("x", 1024*1024)
+	in := `{"Action":"output","Package":"p","Test":"T","Output":"` + longOutput + `"}
+{"Action":"pass","Package":"p","Test":"T","Elapsed":0}
+{"Action":"pass","Package":"p","Elapsed":0}
+`
+	res, err := report.ParseTestJson(strings.NewReader(in))
+	require.Nil(t, err)
+	require.Len(t, res.PackageResult, 1)
+	require.Len(t, res.PackageResult[0].Tests, 1)
+	assert.Equal(t, longOutput, res.PackageResult[0].Tests[0].Output[0].Text)
+	assert.Equal(t, uint(1), res.Passed)
+}
+
+func TestParseTestJson_DeterministicOrder(t *testing.T) {
+	in := `{"Action":"pass","Package":"p","Test":"TestC","Elapsed":0}
+{"Action":"fail","Package":"p","Test":"TestB","Elapsed":0}
+{"Action":"pass","Package":"p","Test":"TestA","Elapsed":0}
+{"Action":"pass","Package":"p","Test":"TestD","Elapsed":1}
+{"Action":"fail","Package":"p","Elapsed":0}
+{"Action":"pass","Package":"b","Elapsed":0}
+{"Action":"pass","Package":"a","Elapsed":0}
+`
+	for range 20 {
+		res, err := report.ParseTestJson(strings.NewReader(in))
+		require.Nil(t, err)
+		names := []string{}
+		for _, p := range res.PackageResult {
+			names = append(names, string(p.Name))
+		}
+		assert.Equal(t, []string{"p", "a", "b"}, names)
+		names = []string{}
+		for _, test := range res.PackageResult[0].Tests {
+			names = append(names, test.Name)
+		}
+		assert.Equal(t, []string{"TestB", "TestD", "TestA", "TestC"}, names)
 	}
 }

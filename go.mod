@@ -1,6 +1,6 @@
 module github.com/becheran/go-testreport
 
-go 1.18
+go 1.27.0
 
 require github.com/stretchr/testify v1.12.1
 
