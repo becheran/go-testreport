@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Markup Link Checker (mlc)
-        uses: becheran/mlc@v1.3.0
+        uses: becheran/mlc@v2.0.0
   lint:
     name: lint
     runs-on: ubuntu-latest
